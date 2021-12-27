@@ -1,0 +1,8 @@
+{
+    "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "EmojiContext": "Data Source=WISH\\SQLEXPRESS;Initial Catalog=emojiExtension;Integrated Security=True;MultipleActiveResultSets=true"
+  }
+}

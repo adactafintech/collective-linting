@@ -1,0 +1,158 @@
+{
+	"name": "emoji-linting",
+	"displayName": "Emoji Linting",
+	"description": "EmojiLinting is extension for Visual Studio Code that enables users to mark and score code in their project. Emojis create an easy to use friendly system that everyone can unserstand. ",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.58.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:emojilinting.startLinting"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "emojilinting.startLinting",
+				"title": "Hello World"
+			},
+			{
+				"command": "emojilinting.smily",
+				"title": "Awesome 🤩"
+			},
+			{
+				"command": "emojilinting.mehemoji",
+				"title": "Confused - 🤨"
+			},
+			{
+				"command": "emojilinting.angry",
+				"title": "Bad - 👎"
+			},
+			{
+				"command": "emojilinting.clear-emoji",
+				"title": "Clear my emoji"
+			}
+		],
+		"menus": {
+			"editor/context": [
+				{
+					"command": "emojilinting.smily",
+					"group": "bookmarks@1",
+					"when": "editorTextFocus && editorLangId == csharp"
+				},
+				{
+					"command": "emojilinting.mehemoji",
+					"group": "bookmarks@2",
+					"when": "editorTextFocus && editorLangId == csharp"
+				},
+				{
+					"command": "emojilinting.angry",
+					"group": "bookmarks@3",
+					"when": "editorTextFocus && editorLangId == csharp"
+				},
+				{
+					"command": "emojilinting.clear-emoji",
+					"group": "bookmarks@4",
+					"when": "editorTextFocus && editorLangId == csharp"
+				}
+			]
+		},
+		"keybindings": [
+			{
+				"command": "emojilinting.smily",
+				"key": "ctrl+shift+1",
+				"mac": "shift+cmd+f"
+			},
+			{
+				"command": "emojilinting.mehemoji",
+				"key": "ctrl+shift+2",
+				"mac": "shift+cmd+r"
+			},
+			{
+				"command": "emojilinting.angry",
+				"key": "ctrl+shift+3",
+				"mac": "shift+cmd+l"
+			},
+			{
+				"command": "emojilinting.clear-emoji",
+				"key": "ctrl+shift+4",
+				"mac": "shift+cmd+l"
+			}
+		],
+		"configuration": {
+			"title": "Emoji-Extension",
+			"properties": {
+				"EmojiSettings.ignoredFileTypes": {
+					"type": [
+						"array"
+					],
+					"default": [],
+					"description": "Ignored file types"
+				},
+				"EmojiSettings.ignoredDocumentPaths": {
+					"type": [
+						"array"
+					],
+					"default": [],
+					"description": "Ignored document paths"
+				},
+				"EmojiSettings.langIdcsharp": {
+					"title": "C#",
+					"type": "boolean",
+					"default": true,
+					"description": "C# files"
+				},
+				"EmojiSettings.langIdjavascript": {
+					"title": "Javascript:",
+					"type": "boolean",
+					"default": true,
+					"description": "javascript files"
+				},
+				"EmojiSettings.langIdphp": {
+					"title": "Php",
+					"type": "boolean",
+					"default": true,
+					"description": "PHP files"
+				},
+				"EmojiSettings.langIdpython": {
+					"title": "Python:",
+					"type": "boolean",
+					"default": true,
+					"description": "python files"
+				}
+			}
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.3",
+		"@types/mocha": "^8.2.2",
+		"@types/node": "14.x",
+		"@types/vscode": "^1.58.0",
+		"@typescript-eslint/eslint-plugin": "^4.26.0",
+		"@typescript-eslint/parser": "^4.26.0",
+		"eslint": "^7.27.0",
+		"glob": "^7.1.7",
+		"mocha": "^8.4.0",
+		"nyc": "^15.1.0",
+		"typescript": "^4.3.2",
+		"vscode-test": "^1.5.2"
+	},
+	"dependencies": {
+		"class-transformer": "^0.4.0",
+		"cross-fetch": "^3.1.4",
+		"reflect-metadata": "^0.1.13",
+		"rewire": "^5.0.0",
+		"simple-git": "^2.47.0"
+	}
+}
