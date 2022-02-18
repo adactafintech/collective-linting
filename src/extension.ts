@@ -6,7 +6,6 @@ import path = require('path');
 import { domainToUnicode } from 'url';
 import * as vscode from 'vscode';
 import DocumentChange from './Models/DocumentChange';
-import EmojiLanguages from './Models/EmojiLanguages';
 import { Change } from './Models/enums';
 import MarkerContainer from './Models/MarkerContainer';
 import { EmojiCodeActionProvider } from './Providers/EmojiCodeActionProvider';

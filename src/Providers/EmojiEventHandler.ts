@@ -82,6 +82,7 @@ export default class EmojiEventHandler {
         const repository = await this.getRepository(editor.document);
 
         this.emojiService.resetGutterDecorations(editor, fileName, repository);
+        this.emojiSettingsService.updateContext(editor.document.languageId);
     }
 
     /**
@@ -106,9 +107,8 @@ export default class EmojiEventHandler {
      * @param context 
      * @returns 
      */
-    public onExtensionActivated(context: vscode.ExtensionContext) : string[] {
+    public onExtensionActivated(context: vscode.ExtensionContext) : void {
         this.onSettingsUpdated(context);
-        return this.emojiSettingsService.getEnabledLangauges();
     }
 
     /**
@@ -116,7 +116,7 @@ export default class EmojiEventHandler {
      * @param context 
      */
     public onSettingsUpdated(context: vscode.ExtensionContext) : void {
-        this.emojiSettingsService.updateLanguages(context);
+        //TODO: implement
     }
 
     private async provideLocation(document: vscode.TextDocument, line: number) {

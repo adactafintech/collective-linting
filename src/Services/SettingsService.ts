@@ -1,74 +1,38 @@
+import { debug } from 'console';
 import * as vscode from 'vscode';
-import EmojiLanguages from "../Models/EmojiLanguages";
-import EmojiLanguage from "../Models/EmojiLanguage";
 import { EmojiCodeActionProvider } from '../Providers/EmojiCodeActionProvider';
 
 export default class EmojiSettingsService {
-    private _languageContainer: EmojiLanguages;
     private _emojinizer: EmojiCodeActionProvider;
 
     constructor() {
-        this._languageContainer = new EmojiLanguages();
         this._emojinizer        = new EmojiCodeActionProvider();
     }
 
     /**
-     * 
-     * @param context 
+     * Shows/Hides emojis from the right click menu based on enabled/disabled languages in settings
+     * @param langId 
      */
-    public updateLanguages(context: vscode.ExtensionContext) : void {
-        const emLanguages = this._languageContainer.languages;
+    public updateContext(langId: string) {
+        console.log("updating context");
 
-        for(let i=0; i < emLanguages.length; i++) {
-            const languageId = emLanguages[i].id;
-            const previousState = emLanguages[i].enabled;
-            const settingsEnabled = vscode.workspace.getConfiguration('EmojiSettings').get<boolean>('langId' + languageId);
+        const config = vscode.workspace.getConfiguration("EmojiSettings");
+        const enabled = config.get('langId'+langId);
 
-            if(settingsEnabled !== undefined && settingsEnabled !== previousState) {
-                if(settingsEnabled) {
-                    let disposable = vscode.languages.registerCodeActionsProvider(languageId, this._emojinizer, {
-                        providedCodeActionKinds: EmojiCodeActionProvider.providedCodeActionKinds
-                    });
-                    this._languageContainer.enableLanguage(languageId, disposable);
-                    context.subscriptions.push(disposable);
-                } else {
-                    this._languageContainer.disableLanguage(languageId);
-                }
-            }
+        vscode.commands.executeCommand('setContext', 'emojilinting:isMenuAllowed', enabled);
+    }
+
+    /**
+     * Provides code action for document, if the document language is enabled in extension settings
+     * @param document 
+     * @param range 
+     * @returns 
+     */
+    public showCodeActions(document: vscode.TextDocument, range: vscode.Range) : vscode.CodeAction[] | undefined {
+        if(vscode.workspace.getConfiguration("EmojiSettings").get('langId'+document.languageId)) {
+            return this._emojinizer.provideCodeActions(document, range);
         }
+
+        return undefined;
     }
-
-    /**
-     * 
-     * @returns 
-     */
-    public getLanguageSettings() : EmojiLanguage[] {
-        return this._languageContainer.languages;
-    }
-
-    /**
-     * 
-     * @param id 
-     * @returns 
-     */
-    public isLanguageEnabled(id: string) : boolean {
-        const enabled = this._languageContainer.isLanguageEnabled(id);
-        return enabled !== undefined && enabled === true;
-    }
-
-    /**
-     * 
-     * @returns 
-     */
-    public getEnabledLangauges() : string[] {
-        let enabledLanguages : string[];
-        enabledLanguages = [];
-
-        const enabled = this._languageContainer.getEnabledLanguages();
-        enabled.forEach(element => {
-            enabledLanguages.push(element.id);
-        });
-
-        return enabledLanguages;
-    } 
 }

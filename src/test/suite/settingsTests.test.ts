@@ -1,13 +1,10 @@
 import * as assert from 'assert';
-
-import EmojiLanguages from '../../Models/EmojiLanguages';
 import EmojiSetting from '../../Models/EmojiSettngs';
 
 suite('EmojiSettings Test Suite', () => {
 
     test("Disable language", () => {
-        let languages = new EmojiLanguages();
-        
+        //TODO: implement
     });
 
     test("Test document paths", () => {

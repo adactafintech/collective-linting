@@ -2,7 +2,7 @@
 	"name": "emoji-linting",
 	"displayName": "Emoji Linting",
 	"description": "EmojiLinting is extension for Visual Studio Code that enables users to mark and score code in their project. Emojis create an easy to use friendly system that everyone can unserstand. ",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"engines": {
 		"vscode": "^1.58.0"
 	},
@@ -41,22 +41,22 @@
 				{
 					"command": "emojilinting.smily",
 					"group": "bookmarks@1",
-					"when": "editorTextFocus && editorLangId == csharp"
+					"when": "editorTextFocus && emojilinting:isMenuAllowed"
 				},
 				{
 					"command": "emojilinting.mehemoji",
 					"group": "bookmarks@2",
-					"when": "editorTextFocus && editorLangId == csharp"
+					"when": "editorTextFocus && emojilinting:isMenuAllowed"
 				},
 				{
 					"command": "emojilinting.angry",
 					"group": "bookmarks@3",
-					"when": "editorTextFocus && editorLangId == csharp"
+					"when": "editorTextFocus && emojilinting:isMenuAllowed"
 				},
 				{
 					"command": "emojilinting.clear-emoji",
 					"group": "bookmarks@4",
-					"when": "editorTextFocus && editorLangId == csharp"
+					"when": "editorTextFocus && emojilinting:isMenuAllowed"
 				}
 			]
 		},
@@ -85,20 +85,6 @@
 		"configuration": {
 			"title": "Emoji-Extension",
 			"properties": {
-				"EmojiSettings.ignoredFileTypes": {
-					"type": [
-						"array"
-					],
-					"default": [],
-					"description": "Ignored file types"
-				},
-				"EmojiSettings.ignoredDocumentPaths": {
-					"type": [
-						"array"
-					],
-					"default": [],
-					"description": "Ignored document paths"
-				},
 				"EmojiSettings.langIdcsharp": {
 					"title": "C#",
 					"type": "boolean",
@@ -108,20 +94,62 @@
 				"EmojiSettings.langIdjavascript": {
 					"title": "Javascript:",
 					"type": "boolean",
-					"default": true,
-					"description": "javascript files"
+					"default": false,
+					"description": "Javascript files"
 				},
 				"EmojiSettings.langIdphp": {
 					"title": "Php",
 					"type": "boolean",
-					"default": true,
+					"default": false,
 					"description": "PHP files"
 				},
 				"EmojiSettings.langIdpython": {
 					"title": "Python:",
 					"type": "boolean",
 					"default": true,
-					"description": "python files"
+					"description": "Python files"
+				},
+				"EmojiSettings.langIdjava": {
+					"title": "Java:",
+					"type": "boolean",
+					"default": true,
+					"description": "Java files"
+				},
+				"EmojiSettings.langIdcpp": {
+					"title": "C++:",
+					"type": "boolean",
+					"default": true,
+					"description": "C++ files"
+				},
+				"EmojiSettings.langIdcss": {
+					"title": "CSS:",
+					"type": "boolean",
+					"default": true,
+					"description": "CSS files"
+				},
+				"EmojiSettings.langIdhtml": {
+					"title": "HTML:",
+					"type": "boolean",
+					"default": true,
+					"description": "HTML files"
+				},
+				"EmojiSettings.langIdtypescript": {
+					"title": "TypeScript:",
+					"type": "boolean",
+					"default": true,
+					"description": "TypeScript files"
+				},
+				"EmojiSettings.langIdmarkdown": {
+					"title": "Markdown:",
+					"type": "boolean",
+					"default": true,
+					"description": "Markdown files"
+				},
+				"EmojiSettings.ApiURL": {
+					"title": "APIUrl",
+					"type": "string",
+					"default": "http://localhost:7071/api/v1/markerService",
+					"description": "Base url of rest api that is in charge of persiting emoji linting data"
 				}
 			}
 		}

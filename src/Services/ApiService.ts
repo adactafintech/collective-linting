@@ -1,10 +1,20 @@
 import fetch from 'cross-fetch';
+import * as vscode from 'vscode';
 
 export default class ApiService {
-    public _apiMarkerURL: string;
+    public _apiMarkerURL: string|undefined;
+    private _apiEndPoint = "/api/v1/markerService";
 
-    constructor(apiUrl : string = "http://localhost:7071/api/v1/markerService") {
-        this._apiMarkerURL = apiUrl;
+    constructor() {
+        this.fetchAPIURL();
+    }
+
+    /**
+     * Fetches the latest setting from extension configuration
+     */
+    private fetchAPIURL() : void {
+        const apiUrl = vscode.workspace.getConfiguration('EmojiSettings').get<string>('ApiURL');
+        this._apiMarkerURL = apiUrl + this._apiEndPoint;
     }
 
     /**
@@ -14,16 +24,24 @@ export default class ApiService {
      * @returns 
      */
     public async getMarkersFromApiByDocument(document: string, remote: string) {
+        this.fetchAPIURL();
+
         // Get Data
-        let response = await fetch(this._apiMarkerURL + "/" + document.split("/").join("--") + "/" + remote.split("/").join("--") + "/find", { method: "GET", mode: "no-cors" })
-        .then(response => response.json())
+        let finalResponse = await fetch(this._apiMarkerURL + "/" + document.split("/").join("--") + "/" + remote.split("/").join("--") + "/find", { method: "GET", mode: "no-cors" })
+        .then(response => {
+            response.json();
+            console.log(response);
+        })
         .then(data => data)
         .catch(error => {
-          console.error("Error: " + error);
+            console.error();
+            console.error("Error: " + error);
           return [];
         });
 
-        return response;
+        console.log(finalResponse);
+
+        return finalResponse;
     }
 
     /**
@@ -32,13 +50,18 @@ export default class ApiService {
      * @returns 
      */
     public saveNewMarker(marker: any) : boolean {
+        this.fetchAPIURL();
+
         try {
             fetch(this._apiMarkerURL + "/newScore", 
             { 
                 method: "POST",
                 mode: "no-cors",
                 body: JSON.stringify(marker)
-            }).then(response => response.status)
+            }).then(response => {
+                response.status;
+                console.log(response);
+            })
             .then(data => data)
             .catch(error => {
               throw new Error(error);
@@ -56,6 +79,8 @@ export default class ApiService {
      * @returns 
      */
     public getAllMarkers() : any|null {
+        this.fetchAPIURL();
+
         try {
             return fetch(this._apiMarkerURL + "/all", { method: "GET", mode: "no-cors" })
             .then(response => response.json())
@@ -75,6 +100,8 @@ export default class ApiService {
      * @returns 
      */
     public removeScore(request: any) {
+        this.fetchAPIURL();
+
         try {
             fetch(this._apiMarkerURL + "/removeScore", 
             { 

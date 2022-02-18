@@ -5,6 +5,7 @@
 	<AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <Nullable>annotations</Nullable>
+    <UserSecretsId>af3d351e-c2ca-44f6-bc43-fa9d96fa210e</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Migrations\20211026074348_InitDatabase.cs" />

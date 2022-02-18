@@ -30,6 +30,14 @@ Server side of the extension uses Microsoft Azure Functions v4 and SDK .NET 6.0 
 4. In the Debug Console you should see the message "Congratulations, your extension "EmojiLinting" is now active!"
 5. If you right click in the newly opened document you should see options for adding emojis to lines.
 
+## Pack and publish the extension
+Documentation regarding packing and publishing the extension is available at https://code.visualstudio.com/api/working-with-extensions/publishing-extension
+To package the extension as vsix and make it available for others to install run:
+```
+npm install -g vsce
+vsce package
+```
+
 ## Extension Settings
 
 TODO: complete
