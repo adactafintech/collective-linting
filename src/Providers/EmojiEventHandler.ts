@@ -50,6 +50,26 @@ export default class EmojiEventHandler {
         this.emojiService.deleteMarker(position, editor, user);
     }
 
+    public onStatWindowOpen() {
+        const panel = vscode.window.createWebviewPanel(
+            "statView",
+            "Stat View",
+            vscode.ViewColumn.Beside
+        );
+
+        panel.webview.html = `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Cat Coding</title>
+        </head>
+        <body>
+            <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" />
+        </body>
+        </html>`;
+    }
+
     /**
      * Event that fires whenever the file is saved 
      * @param document 

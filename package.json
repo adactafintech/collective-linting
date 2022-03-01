@@ -34,6 +34,10 @@
 			{
 				"command": "emojilinting.clear-emoji",
 				"title": "Clear my emoji"
+			},
+			{
+				"command": "emojilinting.showStats",
+				"title": "Show Statistics"
 			}
 		],
 		"menus": {

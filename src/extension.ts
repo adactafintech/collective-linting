@@ -90,7 +90,12 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	context.subscriptions.push(disposable);
+	let statWindowCommand = vscode.commands.registerCommand('emojilinting.showStats', () => {
+		vscode.window.showInformationMessage("Showing stat window");
+		emojiEventHandler.onStatWindowOpen();
+	});
+
+	context.subscriptions.push(disposable, statWindowCommand);
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('emojilinting.smily', () => {
