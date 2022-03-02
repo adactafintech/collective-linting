@@ -1,4 +1,4 @@
-export const enum Change {
+export enum Change {
     lineAdded       = "NEWLINE",
     lineUpdated     = "UPDATE",
     lineWhiteSpaced = "WHITESPACE",

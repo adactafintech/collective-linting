@@ -1,33 +1,19 @@
-import Emoji from "../Models/Emoji";
-import EmojiContainer from "../Models/EmojiContainer";
-import EmojiDecoration from "../Models/EmojiDecoration";
-import Gutter from "../Models/Gutter";
-import PositionMarker from "../Models/PositionMarker";
-import UIEmoji from "../Models/UIEmoji";
+import {EmojiContainer} from "../Models/EmojiContainer";
+import {EmojiDecoration} from "../Models/EmojiDecoration";
+import {Gutter} from "../Models/Gutter";
+import {UIEmoji} from "../Models/UIEmoji";
 import * as vscode from 'vscode';
-import MarkerService from "./MarkerService";
-import MarkerPosition from "../Models/MarkerPosition";
-import SyncService from "./SyncService";
-import DocumentChange from "../Models/DocumentChange";
-import ChangeManager from "../Providers/ChangeManager";
-import { Change } from "../Models/enums";
+import {MarkerService} from "./MarkerService";
+import {MarkerPosition} from "../Models/MarkerPosition";
+import {SyncService} from "./SyncService";
+import {DocumentChange} from "../Models/DocumentChange";
+import {Change} from "../Models/enums";
 
-export default class EmojiPresentationService {
-    emojiContainer:     EmojiContainer;
-    markerService:      MarkerService;
-    snycService:        SyncService;
-    activeDecoration:   EmojiDecoration[];
-
-    constructor() {
-        this.emojiContainer     = new EmojiContainer();
-        this.markerService      = new MarkerService();
-        this.snycService        = new SyncService();
-        this.activeDecoration   = [];
-    }
-
-    public initializeMarkers() : void {
-        this.markerService.initializeMarkers();
-    }
+export class EmojiPresentationService {
+    emojiContainer:     EmojiContainer      = new EmojiContainer();
+    markerService:      MarkerService       = new MarkerService();
+    snycService:        SyncService         = new SyncService();
+    activeDecoration:   EmojiDecoration[]   = [];
 
     /**
      * 
@@ -103,12 +89,14 @@ export default class EmojiPresentationService {
         const markers           = this.snycService.sync(change, await this.markerService.getMarkersForDocument(fileName, repository));
         let emojis: UIEmoji[]   = [];
 
-        for(let i=0; i < markers.length; i++) {
-            if(markers[i].deleted === false) {
-                const tmpEmoji = this.emojiContainer.getEmojiByScore(markers[i].score.calculateAverage());
-                if(tmpEmoji !== undefined) {
-                    emojis.push(new UIEmoji(tmpEmoji, markers[i].position));
-                }
+        for(const marker of markers) {
+            if(marker.softDelete) {
+                continue;
+            }
+
+            const tmpEmoji = this.emojiContainer.getEmojiByScore(marker.score.calculateAverage());
+            if(tmpEmoji !== undefined) {
+                emojis.push(new UIEmoji(tmpEmoji, marker.position));
             }
         }
 
@@ -154,7 +142,7 @@ export default class EmojiPresentationService {
     private showDecorationOnPosition(position: MarkerPosition, editor: vscode.TextEditor) {
         const marker = this.markerService.getMarkerByPosition(position);
         
-        if(marker !== null && marker.deleted === false) {
+        if(marker !== null && marker.softDelete === false) {
             const uiEmoji = this.emojiContainer.getEmojiByScore(marker.score.calculateAverage());
             if(uiEmoji !== undefined) {
                 const tmpGutter = new Gutter(uiEmoji.filePath, uiEmoji.size);
@@ -176,9 +164,7 @@ export default class EmojiPresentationService {
     public async showDecorationForDocument(editor: vscode.TextEditor, fileName: string, repository: string) {
         let uiEmojis = await this.getEmojisForDocument(editor.document, fileName, repository);
 
-        for(let i=0; i < uiEmojis.length; i++) {
-            const uiEmoji = uiEmojis[i];
-
+        for(const uiEmoji of uiEmojis) {
             //Create ne gutter
             const tmpGutter = new Gutter(uiEmoji.emoji.filePath, uiEmoji.emoji.size);
             this.registerActiveDecoration(tmpGutter, new MarkerPosition(fileName, repository, uiEmoji.position.line));
@@ -217,18 +203,18 @@ export default class EmojiPresentationService {
     public provideHoverMessage(position: MarkerPosition) : string|null {
         let marker = this.markerService.getMarkerByPosition(position);
 
-        if(marker !== null && marker.deleted === false) {
+        if(marker !== null && marker.softDelete === false) {
             const occurenceMap = marker.getStatistics();
             const gradeEmojis = this.emojiContainer.gradeEmojis;
     
             let hoverMessage = "";
 
-            for(let i=0; i < gradeEmojis.length; i++) {
-                const num = occurenceMap.get(gradeEmojis[i].worth);
+            for(const gradeEmoji of gradeEmojis) {
+                const num = occurenceMap.get(gradeEmoji.worth);
                 if(num !== undefined) {
-                    hoverMessage += gradeEmojis[i].emoji + ": " + num + " ";
+                    hoverMessage += gradeEmoji.emoji + ": " + num + " ";
                 } else {
-                    hoverMessage += gradeEmojis[i].emoji + ": 0 "; 
+                    hoverMessage += gradeEmoji.emoji + ": 0 "; 
                 }
             }
         

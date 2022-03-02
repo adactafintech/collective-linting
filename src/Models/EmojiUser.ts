@@ -1,9 +1,9 @@
-import Emoji from "./Emoji";
+import {Emoji} from "./Emoji";
 
-export default class EmojiUser {
-    name: string;
-    timestamp: string;
-    emojiMark: Emoji;
+export class EmojiUser {
+    readonly name:      string;
+    readonly timestamp: string;
+    readonly emojiMark: Emoji;
 
     /**
      * 
@@ -13,7 +13,6 @@ export default class EmojiUser {
      */
     constructor(userName: string, time: string, mark: Emoji) {
         this.name = userName;
-        this.timestamp = '';
         this.timestamp = time;
         this.emojiMark = mark;
     }

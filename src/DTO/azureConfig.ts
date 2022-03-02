@@ -1,11 +1,9 @@
-export interface AzureClientCredentialRequest
-{
+export interface AzureClientCredentialRequest {
     authority: string,
     scopes: []
 }
 
-export interface AzurePortalConfig
-{
+export interface AzurePortalConfig {
     auth: {
         clientId:       string,
         authority:      string,

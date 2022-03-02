@@ -1,12 +1,10 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
-import path = require('path');
-import SyncService from '../../Services/SyncService';
-import DocumentChange from '../../Models/DocumentChange';
-import PositionMarker from '../../Models/PositionMarker';
-import { insidersDownloadDirMetadata } from 'vscode-test/out/util';
+import {SyncService} from '../../Services/SyncService';
+import {DocumentChange} from '../../Models/DocumentChange';
+import {PositionMarker} from '../../Models/PositionMarker';
 import { Change } from '../../Models/enums';
-import MarkerPosition from '../../Models/MarkerPosition';
+import {MarkerPosition} from '../../Models/MarkerPosition';
 
 suite('Sync file changes test', () => {
     const testDocument1 = vscode.Uri.file("src\test\suite\testDocument-original.cs");
@@ -34,8 +32,8 @@ suite('Sync file changes test', () => {
 
         syncService.sync(change, [marker1, marker2]);
 
-        assert.strictEqual(false, marker1.deleted);
-        assert.strictEqual(false, marker2.deleted);
+        assert.strictEqual(false, marker1.softDelete);
+        assert.strictEqual(false, marker2.softDelete);
     });
 
     test("Added whitespace to marked line", () => {
@@ -47,10 +45,10 @@ suite('Sync file changes test', () => {
 
         syncService.sync(change, [marker1, marker2]);
 
-        assert.strictEqual(false, marker1.deleted);
+        assert.strictEqual(false, marker1.softDelete);
         assert.strictEqual(1, marker1.position.line);
 
-        assert.strictEqual(false, marker2.deleted);
+        assert.strictEqual(false, marker2.softDelete);
         assert.strictEqual(3, marker2.position.line);
     });
 
@@ -66,10 +64,10 @@ suite('Sync file changes test', () => {
 
         syncService.sync(change, [marker1, marker2]);
 
-        assert.strictEqual(true, marker1.deleted);
+        assert.strictEqual(true, marker1.softDelete);
         assert.strictEqual(1, marker1.position.line);
 
-        assert.strictEqual(false, marker2.deleted);
+        assert.strictEqual(false, marker2.softDelete);
         assert.strictEqual(3, marker2.position.line);
 
         //Step 2: add the same content on last line
@@ -79,10 +77,10 @@ suite('Sync file changes test', () => {
 
         syncService.sync(change, [marker1, marker2]);
 
-        assert.strictEqual(false, marker1.deleted);
+        assert.strictEqual(false, marker1.softDelete);
         assert.strictEqual(tempDocumentData.length-1, marker1.position.line);
 
-        assert.strictEqual(false, marker2.deleted);
+        assert.strictEqual(false, marker2.softDelete);
         assert.strictEqual(3, marker2.position.line);
     });
 
@@ -93,10 +91,10 @@ suite('Sync file changes test', () => {
 
         syncService.sync(change, [marker1, marker2]);
 
-        assert.strictEqual(true, marker1.deleted);
+        assert.strictEqual(true, marker1.softDelete);
         assert.strictEqual(1, marker1.position.line);
 
-        assert.strictEqual(false, marker2.deleted);
+        assert.strictEqual(false, marker2.softDelete);
         assert.strictEqual(3, marker2.position.line);
     });
 
@@ -110,10 +108,10 @@ suite('Sync file changes test', () => {
 
         syncService.sync(change, [marker1, marker2]);
 
-        assert.strictEqual(true, marker1.deleted);
+        assert.strictEqual(true, marker1.softDelete);
         assert.strictEqual(1, marker1.position.line);
 
-        assert.strictEqual(false, marker2.deleted);
+        assert.strictEqual(false, marker2.softDelete);
         assert.strictEqual(3, marker2.position.line);
     });
 
@@ -128,10 +126,10 @@ suite('Sync file changes test', () => {
 
         syncService.sync(change, [marker1, marker2]);
 
-        assert.strictEqual(false, marker1.deleted);
+        assert.strictEqual(false, marker1.softDelete);
         assert.strictEqual(1, marker1.position.line);
 
-        assert.strictEqual(false, marker2.deleted);
+        assert.strictEqual(false, marker2.softDelete);
         assert.strictEqual(4, marker2.position.line);
     });
 
@@ -146,10 +144,10 @@ suite('Sync file changes test', () => {
 
         syncService.sync(change, [marker1, marker2]);
 
-        assert.strictEqual(false, marker1.deleted);
+        assert.strictEqual(false, marker1.softDelete);
         assert.strictEqual(2, marker1.position.line);
 
-        assert.strictEqual(false, marker2.deleted);
+        assert.strictEqual(false, marker2.softDelete);
         assert.strictEqual(4, marker2.position.line);
     });
 
@@ -164,10 +162,10 @@ suite('Sync file changes test', () => {
 
         syncService.sync(change, [marker1, marker2]);
 
-        assert.strictEqual(false, marker1.deleted);
+        assert.strictEqual(false, marker1.softDelete);
         assert.strictEqual(1, marker1.position.line);
 
-        assert.strictEqual(false, marker2.deleted);
+        assert.strictEqual(false, marker2.softDelete);
         assert.strictEqual(2, marker2.position.line);
     });
 
@@ -182,10 +180,10 @@ suite('Sync file changes test', () => {
 
         syncService.sync(change, [marker1, marker2]);
 
-        assert.strictEqual(false, marker1.deleted);
+        assert.strictEqual(false, marker1.softDelete);
         assert.strictEqual(0, marker1.position.line);
 
-        assert.strictEqual(false, marker2.deleted);
+        assert.strictEqual(false, marker2.softDelete);
         assert.strictEqual(2, marker2.position.line);
     });
 
@@ -201,10 +199,10 @@ suite('Sync file changes test', () => {
 
         syncService.sync(change, [marker1, marker2]);
 
-        assert.strictEqual(true, marker1.deleted);
+        assert.strictEqual(true, marker1.softDelete);
         assert.strictEqual(1, marker1.position.line);
 
-        assert.strictEqual(false, marker2.deleted);
+        assert.strictEqual(false, marker2.softDelete);
         assert.strictEqual(3, marker2.position.line);
 
         //Step 2: delete content of second mark line
@@ -212,10 +210,10 @@ suite('Sync file changes test', () => {
         change = new DocumentChange(3, tempDocumentData, Change.lineUpdated);
         syncService.sync(change, [marker1, marker2]);
 
-        assert.strictEqual(true, marker1.deleted);
+        assert.strictEqual(true, marker1.softDelete);
         assert.strictEqual(1, marker1.position.line);
 
-        assert.strictEqual(true, marker2.deleted);
+        assert.strictEqual(true, marker2.softDelete);
         assert.strictEqual(3, marker2.position.line);
 
         //Step 3: insert first mark content to second marks line
@@ -223,10 +221,10 @@ suite('Sync file changes test', () => {
         change = new DocumentChange(3, tempDocumentData, Change.lineUpdated);
         syncService.sync(change, [marker1, marker2]);
 
-        assert.strictEqual(false, marker1.deleted);
+        assert.strictEqual(false, marker1.softDelete);
         assert.strictEqual(3, marker1.position.line);
 
-        assert.strictEqual(true, marker2.deleted);
+        assert.strictEqual(true, marker2.softDelete);
         assert.strictEqual(3, marker2.position.line);
     });
 

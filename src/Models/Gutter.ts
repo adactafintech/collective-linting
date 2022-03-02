@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
 import path = require('path');
 
-export default class Gutter {
-    gutter: vscode.TextEditorDecorationType;
-    filePath: string;
-    size: string;
+export class Gutter {
+    gutter:     vscode.TextEditorDecorationType;
+    filePath:   string;
+    size:       string;
 
     /**
      * 

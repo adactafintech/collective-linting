@@ -1,14 +1,10 @@
-import MarkerPosition from "../Models/MarkerPosition";
-import PositionMarker from "../Models/PositionMarker";
-import { CreateOrUpdateRequest, RemoveScoreRequest, FindMarkerRequest } from "../Requests/apiRequests";
+import {MarkerPosition} from "../Models/MarkerPosition";
+import {PositionMarker} from "../Models/PositionMarker";
+import { CreateOrUpdateRequest, RemoveScoreRequest, FindMarkerRequest } from "../DTO/apiRequests";
 
-export default class ConverterService {
+export class ConverterService {
+    private readonly markerProps: string[] = ["content", "documentUri", "line", "isDeleted"];
 
-    private markerProps: string[];
-
-    constructor () {
-        this.markerProps = ["content", "documentUri", "line", "isDeleted"];
-    }
     /**
      * TODO: optimize
      * Converts api v1 response from JSON to markers array
@@ -18,8 +14,8 @@ export default class ConverterService {
     public fromJSONToMarkerByDocument(response: any) : PositionMarker[] {
         try {
             const markers: PositionMarker[] = response.filter((marker: any) => {
-                for(let i = 0; i < this.markerProps.length; i++) {
-                    if(!marker.hasOwnProperty(this.markerProps[i])){
+                for(const prop of this.markerProps) {
+                    if(!marker.hasOwnProperty(prop)){
                         return false;
                     }
                 }

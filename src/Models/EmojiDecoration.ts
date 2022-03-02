@@ -1,9 +1,9 @@
-import Gutter from "./Gutter";
-import MarkerPosition from "./MarkerPosition";
+import {Gutter} from "./Gutter";
+import {MarkerPosition} from "./MarkerPosition";
 
-export default class EmojiDecoration {
-    public readonly gutter:     Gutter;
-    public readonly position:   MarkerPosition;
+export class EmojiDecoration {
+    readonly gutter:     Gutter;
+    readonly position:   MarkerPosition;
 
     /**
      * 

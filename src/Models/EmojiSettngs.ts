@@ -1,11 +1,6 @@
-export default class EmojiSetting {
-    private ignoredFileTypes:       Set<string>;
-    private ignoredDocumentPaths:   Set<string>;
-
-    constructor() {
-        this.ignoredFileTypes       = new Set();
-        this.ignoredDocumentPaths   = new Set();
-    }
+export class EmojiSetting {
+    private ignoredFileTypes:       Set<string> = new Set();
+    private ignoredDocumentPaths:   Set<string> = new Set();
 
     /**
      * Starts ignoring
@@ -44,5 +39,4 @@ export default class EmojiSetting {
         this.ignoredDocumentPaths.delete(documentPath);
         return this.ignoredDocumentPaths;
     }
-
 }

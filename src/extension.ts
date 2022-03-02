@@ -1,33 +1,10 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import { strict } from 'assert';
-import { networkInterfaces } from 'os';
-import path = require('path');
-import { domainToUnicode } from 'url';
 import * as vscode from 'vscode';
-import DocumentChange from './Models/DocumentChange';
-import { Change } from './Models/enums';
-import MarkerContainer from './Models/MarkerContainer';
-import { EmojiCodeActionProvider } from './Providers/EmojiCodeActionProvider';
-import EmojiEventHandler from './Providers/EmojiEventHandler';
-import GitService from './Services/GitService';
-import * as msal from '@azure/msal-node';
-
-const config = {
-    auth: {
-      clientId: "a9311f15-0555-4bcf-a085-1f27367c00dc",
-      authority: "https://login.microsoftonline.com/cdeb9156-219a-49e3-b414-f63acd298e9c",
-      clientSecret: "N2X7Q~c-CuG~V-DCK_Afep313_YkATg~UGG1L",
-	  redirectUri: "https://func-collective-linting.azurewebsites.net/.auth/login/aad/callback"
-    },
-    system: {
-      loggerOptions: {
-        piiLoggingEnabled: false,
-        logLevel: msal.LogLevel.Verbose,
-      },
-    },
-  };
-
+import {DocumentChange} from './Models/DocumentChange';
+import {Change} from './Models/enums';
+import {EmojiEventHandler} from './Providers/EmojiEventHandler';
+import {GitService} from './Services/GitService';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -41,7 +18,6 @@ export function activate(context: vscode.ExtensionContext) {
 	//TODO: registration command
 	let disposable = vscode.commands.registerCommand('emojilinting.startLinting', () => {
 		const enabledLanguges = emojiEventHandler.onExtensionActivated(context);
-		emojiEventHandler.onInitialize();
 	});
 
 	// Shows gutter icons when chaning active text editor
@@ -94,7 +70,6 @@ export function activate(context: vscode.ExtensionContext) {
 	 * Fires when document is saved
 	 */
 	vscode.workspace.onDidSaveTextDocument(document =>  {
-		//TODO: refactor
 		let editor = vscode.window.activeTextEditor;
 		if(editor !== undefined) {
 			let documentContent = [];
@@ -103,10 +78,6 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 
 			emojiEventHandler.onFileSaved(editor, new DocumentChange(-1, documentContent, Change.fileSaved));
-			const neki = vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath)[0].toString();
-			if(neki !== undefined) {	
-				let gitService = new GitService(neki);
-			}
 		}
 	});
 

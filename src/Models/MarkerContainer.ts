@@ -1,21 +1,11 @@
-import MarkerPosition from "./MarkerPosition";
-import PositionMarker from "./PositionMarker";
-import ApiService from "../Services/ApiService";
-import ConverterService from "../Services/ConverterService";
-export default class MarkerContainer {
-    markerPositions: PositionMarker[];
-    private apiService: ApiService;
-    private converter: ConverterService;
-
-    /**
-     * 
-     * @param test 
-     */
-    constructor(test = false) {
-        this.markerPositions    = [];
-        this.apiService         = new ApiService();
-        this.converter          = new ConverterService;
-    }
+import {MarkerPosition} from "./MarkerPosition";
+import {PositionMarker} from "./PositionMarker";
+import {ApiService} from "../Services/ApiService";
+import {ConverterService} from "../Services/ConverterService";
+export class MarkerContainer {
+    markerPositions:    PositionMarker[]    = [];
+    private apiService: ApiService          = new ApiService();
+    private converter:  ConverterService = new ConverterService();
 
     /**
      * Get all markers that are positioned inside provided document
@@ -26,8 +16,7 @@ export default class MarkerContainer {
         let markers: PositionMarker[]  = [];
         this.markerPositions = [...this.markerPositions, ...await this.getMarkerApiCall(document, repository)];
 
-        for(let i=0; i < this.markerPositions.length; i++) {
-            let marker = this.markerPositions[i];
+        for(const marker of this.markerPositions) {
             if(marker.position.document === document.trim() && marker.position.repository === repository.trim()) {
                 markers.push(marker);
             }
@@ -42,9 +31,9 @@ export default class MarkerContainer {
      * @returns 
      */
     public getMarkerByPosition(position: MarkerPosition) : PositionMarker|null {
-        for(let i=0; i < this.markerPositions.length; i++) {
-            if(this.markerPositions[i].position.compare(position)) {
-                return this.markerPositions[i];
+        for(const marker of this.markerPositions) {
+            if(marker.position.compare(position)) {
+                return marker;
             }
         }
 
@@ -101,7 +90,7 @@ export default class MarkerContainer {
      * @param marker 
      */
     public deleteMarker(marker: PositionMarker) : void {
-        marker.softDelete();
+        marker.softDelete = true;
     }
 
     /**
@@ -109,7 +98,7 @@ export default class MarkerContainer {
      * @param document 
      * @returns 
      */
-    public async getMarkerApiCall(document: string|undefined = undefined, repository: string|undefined) : Promise<any> {
+    public async getMarkerApiCall(document: string|undefined, repository: string|undefined) : Promise<any> {
         let markers: any = [];
 
         if(document !== undefined && repository !== undefined) {

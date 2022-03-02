@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import EmojiContainer from '../../Models/EmojiContainer';
+import {EmojiContainer} from '../../Models/EmojiContainer';
 
 suite('Display Emoji Test Suite', () => {
 

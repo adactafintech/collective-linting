@@ -1,17 +1,16 @@
 import fetch from 'cross-fetch';
 import * as vscode from 'vscode';
 import * as msal from '@azure/msal-node';
-
 import { AzurePortalConfig, AzureClientCredentialRequest } from '../DTO/azureConfig';
 import { CreateOrUpdateRequest, RemoveScoreRequest, FindMarkerRequest } from '../DTO/apiRequests';
 
-export default class ApiService {
-    public _apiMarkerURL: string|undefined;
-    private _apiEndPoint = "/api/v1/markerService";
-    private _bearerToken: string = "";
-    private _azureConfig: AzurePortalConfig = require('../../config/azurePortalConfig.json');
-    private _clientCredentialRequest: AzureClientCredentialRequest = require('../../config/azureClientCredentialRequest.json');
-    private _attempts: number = 5;
+export class ApiService {
+    private apiMarkerURL:                       string|undefined                = undefined;
+    readonly apiEndPoint:                       string                          = "/api/v1/markerService";
+    private bearerToken:                        string                          = "";
+    private readonly azureConfig:               AzurePortalConfig               = require('../../config/azurePortalConfig.json');
+    private readonly clientCredentialRequest:   AzureClientCredentialRequest    = require('../../config/azureClientCredentialRequest.json');
+    private readonly attempts:                  number                          = 5;
 
     constructor() {
         this.fetchAPIURL();
@@ -22,7 +21,7 @@ export default class ApiService {
      */
     private fetchAPIURL() : void {
         const apiUrl = vscode.workspace.getConfiguration('EmojiSettings').get<string>('ApiURL');
-        this._apiMarkerURL = apiUrl + this._apiEndPoint;
+        this.apiMarkerURL = apiUrl + this.apiEndPoint;
     }
 
     /**
@@ -35,19 +34,19 @@ export default class ApiService {
         this.fetchAPIURL();
 
         let i = 0;
-        while(i < this._attempts) {
+        while(i < this.attempts) {
             // Get Data
-            let response = await fetch(this._apiMarkerURL + "/" + req.document.split("/").join("--") + "/" + req.remote.split("/").join("--") + "/find", 
+            let finalResponse = await fetch(this.apiMarkerURL + "/" + req.document.split("/").join("--") + "/" + req.remote.split("/").join("--") + "/find", 
             {
                 method: "GET", 
                 mode: "no-cors",
                 headers: {
-                    "authorization": "Bearer " + this._bearerToken
+                    "authorization": "Bearer " + this.bearerToken
                 }
             }).then(response => response);
 
-            if(await this.unauthenticatedResponse(response.status)) {
-                return response.json();
+            if(await this.unauthenticatedResponse(finalResponse.status)) {
+                return finalResponse.json();
             }
 
             i++;
@@ -65,20 +64,20 @@ export default class ApiService {
         this.fetchAPIURL();
 
         let i = 0;
-        while(i < this._attempts) {
+        while(i < this.attempts) {
 
-            let response = await fetch(this._apiMarkerURL + "/newScore", 
+            let finalResponse = await fetch(this.apiMarkerURL + "/newScore", 
             { 
                 method: "POST",
                 mode: "no-cors",
                 body: JSON.stringify(marker),
                 headers: {
-                    "authorization": "Bearer " + this._bearerToken
+                    "authorization": "Bearer " + this.bearerToken
                 }
             }).then(response => response);
 
-            if(await this.unauthenticatedResponse(response.status)) {
-                return response.json();
+            if(await this.unauthenticatedResponse(finalResponse.status)) {
+                return finalResponse.json();
             }
 
             i++;
@@ -95,18 +94,18 @@ export default class ApiService {
         this.fetchAPIURL();
 
         let i = 0;
-        while(i < this._attempts) {
-            let response = await fetch(this._apiMarkerURL + "/all", 
+        while(i < this.attempts) {
+            let finalResponse = await fetch(this.apiMarkerURL + "/all", 
             { 
                 method: "GET", 
                 mode: "no-cors",
                 headers: {
-                    "authorization": "Bearer " + this._bearerToken
+                    "authorization": "Bearer " + this.bearerToken
                 }
             }).then(response => response);
 
-            if(await this.unauthenticatedResponse(response.status)) {
-                return response.json();
+            if(await this.unauthenticatedResponse(finalResponse.status)) {
+                return finalResponse.json();
             }
 
             i++;
@@ -124,19 +123,19 @@ export default class ApiService {
         this.fetchAPIURL();
 
         let i = 0;
-        while(i < this._attempts) {
-            let response = await fetch(this._apiMarkerURL + "/removeScore", 
+        while(i < this.attempts) {
+            let finalResponse = await fetch(this.apiMarkerURL + "/removeScore", 
             { 
                 method: "POST", 
                 mode: "no-cors", 
                 body: JSON.stringify(request),
                 headers: {
-                    "authorization": "Bearer " + this._bearerToken
+                    "authorization": "Bearer " + this.bearerToken
                 }
             }).then(response => response);
 
-            if(await this.unauthenticatedResponse(response.status)) {
-                return response.json();
+            if(await this.unauthenticatedResponse(finalResponse.status)) {
+                return finalResponse.json();
             }
 
             i++;
@@ -150,9 +149,9 @@ export default class ApiService {
      * @returns 
      */
     private async authenticateClient() : Promise<string> {
-        const cca = new msal.ConfidentialClientApplication(this._azureConfig);
+        const cca = new msal.ConfidentialClientApplication(this.azureConfig);
         try {
-            const result = await cca.acquireTokenByClientCredential(this._clientCredentialRequest).then(res => res?.accessToken);
+            const result = await cca.acquireTokenByClientCredential(this.clientCredentialRequest).then(res => res?.accessToken);
             if(result !== undefined) {
                 return result;
             }
@@ -173,7 +172,7 @@ export default class ApiService {
             return true;
         }
         const bearer = await this.authenticateClient();
-        this._bearerToken = bearer;
+        this.bearerToken = bearer;
         
         return false;
     }

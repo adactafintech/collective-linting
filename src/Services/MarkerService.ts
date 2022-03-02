@@ -1,20 +1,9 @@
-import { timeStamp } from 'console';
-import * as vscode from 'vscode';
-import DocumentChange from '../Models/DocumentChange';
-import MarkerContainer from "../Models/MarkerContainer";
-import MarkerPosition from '../Models/MarkerPosition';
-import PositionMarker from '../Models/PositionMarker';
+import {MarkerContainer} from "../Models/MarkerContainer";
+import {MarkerPosition} from '../Models/MarkerPosition';
+import {PositionMarker} from '../Models/PositionMarker';
 
-export default class MarkerService {
-    markerStorage: MarkerContainer;
-
-    constructor() {
-        this.markerStorage = new MarkerContainer();
-    }
-
-    public initializeMarkers() : void {
-       // this.markerStorage.initMarkers();
-    }
+export class MarkerService {
+    markerStorage: MarkerContainer = new MarkerContainer();
     
     /**
      * Returns all markers from marker container that are lcoated in this document
