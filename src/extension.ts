@@ -11,6 +11,23 @@ import MarkerContainer from './Models/MarkerContainer';
 import { EmojiCodeActionProvider } from './Providers/EmojiCodeActionProvider';
 import EmojiEventHandler from './Providers/EmojiEventHandler';
 import GitService from './Services/GitService';
+import * as msal from '@azure/msal-node';
+
+const config = {
+    auth: {
+      clientId: "a9311f15-0555-4bcf-a085-1f27367c00dc",
+      authority: "https://login.microsoftonline.com/cdeb9156-219a-49e3-b414-f63acd298e9c",
+      clientSecret: "N2X7Q~c-CuG~V-DCK_Afep313_YkATg~UGG1L",
+	  redirectUri: "https://func-collective-linting.azurewebsites.net/.auth/login/aad/callback"
+    },
+    system: {
+      loggerOptions: {
+        piiLoggingEnabled: false,
+        logLevel: msal.LogLevel.Verbose,
+      },
+    },
+  };
+
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -19,7 +36,6 @@ export function activate(context: vscode.ExtensionContext) {
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "EmojiLinting" is now active!');
-
 	let emojiEventHandler 	= new EmojiEventHandler();
 
 	//TODO: registration command
@@ -32,8 +48,15 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.window.onDidChangeActiveTextEditor(textEditor => {
 		if(textEditor !== undefined) {
 			emojiEventHandler.onFileOpen(textEditor);
+			emojiEventHandler.hoverService = vscode.languages.registerHoverProvider(textEditor.document.languageId, {
+				provideHover(document, position, token) {
+					return emojiEventHandler.onHover(position.line, document);
+				}
+			});
 		}
 	});
+
+	
 
 	/**
 	 * Fires everytime any configuration is changed
@@ -83,9 +106,6 @@ export function activate(context: vscode.ExtensionContext) {
 			const neki = vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath)[0].toString();
 			if(neki !== undefined) {	
 				let gitService = new GitService(neki);
-				console.log(gitService.getBaseDir());
-				console.log(gitService.getRepository().then(result => console.log(result)));
-				console.log(gitService.getFileName(document.uri.fsPath.toString()).then(result => console.log(result)));
 			}
 		}
 	});

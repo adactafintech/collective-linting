@@ -14,8 +14,6 @@ export default class EmojiSettingsService {
      * @param langId 
      */
     public updateContext(langId: string) {
-        console.log("updating context");
-
         const config = vscode.workspace.getConfiguration("EmojiSettings");
         const enabled = config.get('langId'+langId);
 

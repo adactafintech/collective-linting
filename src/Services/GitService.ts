@@ -8,8 +8,6 @@ export default class GitService {
      * @param filePath 
      */
     constructor(filePath: string) {
-        console.log(filePath);
-
         const options: Partial<SimpleGitOptions> = {
             baseDir: filePath,
             binary: 'git',

@@ -89,7 +89,6 @@ suite('Converter Service Tests', () => {
         assert.strictEqual(12, response.line);
         assert.strictEqual("test-user", response.user);
         assert.strictEqual("refactor-document", response.documentUri);
-        assert.strictEqual(undefined, response.content);
     });
      
 });

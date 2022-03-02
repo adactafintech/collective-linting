@@ -1,5 +1,6 @@
 import MarkerPosition from "../Models/MarkerPosition";
 import PositionMarker from "../Models/PositionMarker";
+import { CreateOrUpdateRequest, RemoveScoreRequest, FindMarkerRequest } from "../Requests/apiRequests";
 
 export default class ConverterService {
 
@@ -9,6 +10,7 @@ export default class ConverterService {
         this.markerProps = ["content", "documentUri", "line", "isDeleted"];
     }
     /**
+     * TODO: optimize
      * Converts api v1 response from JSON to markers array
      * @param response 
      * @returns 
@@ -21,19 +23,14 @@ export default class ConverterService {
                         return false;
                     }
                 }
-    
                 return true;
             }).map((marker: any) => {
-                const position = new MarkerPosition(marker.documentUri, "", marker.line);
+                const position = new MarkerPosition(marker.documentUri.trim(), marker.repository.trim(), marker.line);
                 let newMarker: PositionMarker = new PositionMarker(marker.content, position, marker.isDeleted);
-
                 let numberMap = new Map<number, number>();
 
                 marker.scores.forEach((score: any) => {
-                    
-
                     numberMap.set(score.score.value, score.score.frequency);
-                    
                 });
 
                 newMarker.score.scores = numberMap;
@@ -43,7 +40,6 @@ export default class ConverterService {
     
             return markers;
         } catch(e) {
-            console.error(e);
             return [];
         }
     }    
@@ -55,7 +51,7 @@ export default class ConverterService {
      * @param score 
      * @returns 
      */
-    public createCreateOrUpdateScoreRequest(marker : PositionMarker, user: string, score: number) : any {
+    public createCreateOrUpdateScoreRequest(marker : PositionMarker, user: string, score: number) : CreateOrUpdateRequest {
         return {
             "score": score,
             "user": user,
@@ -72,12 +68,58 @@ export default class ConverterService {
      * @param user 
      * @returns 
      */
-    public createRemoveScoreRequest(marker: PositionMarker, user: string) : any {
+    public createRemoveScoreRequest(marker: PositionMarker, user: string) : RemoveScoreRequest {
         return {
             "documentUri": marker.position.document.split("/").join("--"),
             "repository": marker.position.repository.split("/").join("--"),
             "line": marker.position.line,
             "user": user
+        };
+    }
+
+    /**
+     * 
+     * @param marker 
+     * @param score 
+     * @param user 
+     * @returns 
+     */
+    public createNewMarkerRequest(marker: PositionMarker, score: number, user: string) : CreateOrUpdateRequest {
+        return {
+            score:          score,
+            user:           user,
+            documentUri:    marker.position.document,
+            repository:     marker.position.repository,
+            line:           marker.position.line,
+            content:        marker.content
+        };
+    }
+
+    /**
+     * 
+     * @param document 
+     * @param remote 
+     * @returns 
+     */
+    public createFindMarkersRequest(document: string, remote: string) : FindMarkerRequest {
+        return {
+            document: document,
+            remote: remote,
+        };
+    }
+
+    /**
+     * 
+     * @param marker 
+     * @param user 
+     * @returns 
+     */
+    public createRemoveMarkerRequest(marker: PositionMarker, user: string) : RemoveScoreRequest {
+        return {
+            documentUri: marker.position.document,
+            repository: marker.position.repository,
+            line: marker.position.line,
+            user: user,
         };
     }
 }

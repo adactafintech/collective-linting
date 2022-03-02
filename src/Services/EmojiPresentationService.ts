@@ -175,6 +175,7 @@ export default class EmojiPresentationService {
      */
     public async showDecorationForDocument(editor: vscode.TextEditor, fileName: string, repository: string) {
         let uiEmojis = await this.getEmojisForDocument(editor.document, fileName, repository);
+
         for(let i=0; i < uiEmojis.length; i++) {
             const uiEmoji = uiEmojis[i];
 
@@ -187,7 +188,7 @@ export default class EmojiPresentationService {
                 new vscode.Position(uiEmoji.position.line, 0),
                 new vscode.Position(uiEmoji.position.line, 0)
             )]);
-        }   
+        }
     }
 
     /**

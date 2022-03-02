@@ -8,13 +8,13 @@ export default class SyncService {
      * @param markers 
      */
     public sync(change: DocumentChange, markers: PositionMarker[]) {
-        console.log(markers);
-        if(change.change === Change.lineAdded || change.change === Change.lineUpdated || change.change === Change.lineDeleted) {
-            this.locationChange(change.document, markers);
-        } else if(change.change === Change.lineWhiteSpaced) {
-            this.contentChanged(change, markers);
+        if(markers.length > 0) {
+            if(change.change === Change.lineAdded || change.change === Change.lineUpdated || change.change === Change.lineDeleted) {
+                this.locationChange(change.document, markers);
+            } else if(change.change === Change.lineWhiteSpaced) {
+                this.contentChanged(change, markers);
+            }
         }
-
         return markers;
     }
 

@@ -52,7 +52,7 @@ export default class MarkerService {
             // newMarker.addNewScore(user, score);
             this.markerStorage.registerNewMarker(newMarker, user, score);
         } else {
-            this.markerStorage.addmarkerScore(newMarker, score, user);
+            this.markerStorage.addMarkerScore(newMarker, score, user);
             // newMarker.addNewScore(user, score);
         }
 

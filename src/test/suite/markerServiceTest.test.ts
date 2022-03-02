@@ -23,8 +23,6 @@ suite('Marker Service Test Suite', () => {
         const markers       = await markerService.getMarkersForDocument(document1.path.toString(), repo1);
         const markers2      = await markerService.getMarkersForDocument(document2.path.toString(), repo2);
 
-        console.log(markers);
-
         assert.strictEqual(1, markers.length);
         assert.strictEqual(0, markers2.length);
         assert.strictEqual(marker, markers[0]);

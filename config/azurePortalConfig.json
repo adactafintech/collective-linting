@@ -1,0 +1,8 @@
+{
+    "auth": {
+        "clientId": "a9311f15-0555-4bcf-a085-1f27367c00dc",
+        "authority": "https://login.microsoftonline.com/cdeb9156-219a-49e3-b414-f63acd298e9c",
+        "clientSecret": "N2X7Q~c-CuG~V-DCK_Afep313_YkATg~UGG1L",
+        "redirectUri": "https://func-collective-linting.azurewebsites.net/.auth/login/aad/callback"
+    }
+}

@@ -21,7 +21,7 @@ export default class MarkerPosition {
      * @returns 
      */
     public compare(other: MarkerPosition) : boolean {        
-        return other.line === this._line && other.document === this._document && other.repository === this._repository;
+        return other.line === this._line && other.document.trim() === this._document.trim() && other.repository.trim() === this._repository.trim();
     }
 
     /**

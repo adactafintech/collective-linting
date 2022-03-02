@@ -115,6 +115,8 @@ export default class EmojiEventHandler {
         const position = await this.provideLocation(document, line);
         const hoverMessage = this.emojiService.provideHoverMessage(position);
 
+
+
         if(hoverMessage === null) {
             return hoverMessage;
         } else {
