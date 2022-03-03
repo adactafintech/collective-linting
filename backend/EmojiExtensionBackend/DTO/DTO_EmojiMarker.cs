@@ -56,6 +56,6 @@ namespace EmojiExtensionBackend.DTO
             Repository  = repository;
         }
 
-        public DTO_MarkerPosition Position() => new DTO_MarkerPosition(this.DocumentURI, this.Repository, this.Line);
+        public DTO_MarkerPosition Position() => new(this.DocumentURI, this.Repository, this.Line);
     }
 }

@@ -17,8 +17,7 @@ namespace EmojiExtensionBackend.v1
     public class MarkerStorageFunction
     {
 
-        private EmojiService emojiService;
-        private readonly string APIVersion = "v1";
+        private readonly EmojiService emojiService;
 
         public MarkerStorageFunction(EmojiContext emojiContext)
         {
@@ -46,19 +45,6 @@ namespace EmojiExtensionBackend.v1
         {
             BO_EmojiMarker[] markers = emojiService.GetAllMarkers();
             return new OkObjectResult(JsonConvert.SerializeObject(markers));
-        }
-
-        [FunctionName("DeleteMarkerFunction")]
-        public IActionResult DeleteMarker(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "DELETE", Route = "v1/markerService/disable")] DTO_EmojiMarker marker,
-            ILogger log) {
-
-            if (marker != null) {
-                marker.SoftDelete = true;
-                return new OkObjectResult("Marker on location .... deleted");
-            } else {
-                return new BadRequestObjectResult("Invalid marker....");
-            }
         }
 
         [FunctionName("NewScore")]

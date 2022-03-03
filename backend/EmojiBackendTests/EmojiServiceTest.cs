@@ -10,22 +10,19 @@ namespace EmojiBackendTests
     [TestClass]
     public class EmojiServiceTest
     {
-        // public virtual DTO_ScoreOccurence[] GetScores(DTO_EmojiMarker marker) 
-        static DTO_ScoreOccurence[] emptyScores     = new DTO_ScoreOccurence[] { new DTO_ScoreOccurence(2, 0), new DTO_ScoreOccurence(0, 0), new DTO_ScoreOccurence(-2, 0) };
-        static DTO_ScoreOccurence[] populatedScores = new DTO_ScoreOccurence[] { new DTO_ScoreOccurence(2, 17), new DTO_ScoreOccurence(0, 6), new DTO_ScoreOccurence(-2, 57) };
+        static readonly DTO_ScoreOccurence[] populatedScores = new DTO_ScoreOccurence[] { new(2, 17), new(0, 6), new(-2, 57) };
 
-        static string notFoundDocumentPath  = "not-existing-document";
-        static string validDocumentPath     = "path-to-some-document";
+        static readonly string notFoundDocumentPath  = "not-existing-document";
+        static readonly string validDocumentPath     = "path-to-some-document";
 
-        static string notfoundRemote    = "notfound@github.com";
-        static string validRemote       = "validRemote@github.com";
+        static readonly string validRemote       = "validRemote@github.com";
 
-        static string user = "test-user";
+        static readonly string user = "test-user";
 
-        static DTO_EmojiMarker marker1 = new DTO_EmojiMarker("path-to-some-document", "validRemote@github.com", 17, "test content in document", true);
-        static DTO_EmojiMarker marker2 = new DTO_EmojiMarker("path-to-some-document", "validRemote@github.com", 743, "test content in document somewhere else", false);
+        static readonly DTO_EmojiMarker marker1 = new("path-to-some-document", "validRemote@github.com", 17, "test content in document", true);
+        static readonly DTO_EmojiMarker marker2 = new("path-to-some-document", "validRemote@github.com", 743, "test content in document somewhere else", false);
 
-        static Mock<EmojiContext> dalContext = new Mock<EmojiContext>();
+        static readonly Mock<EmojiContext> dalContext = new();
 
         [AssemblyInitialize]
         public static void AssemblyInit(TestContext context)
@@ -33,7 +30,7 @@ namespace EmojiBackendTests
             dalContext.Setup(x => x.GetMarkersByDocument(validDocumentPath, validRemote)).Returns(new DTO_EmojiMarker[] { marker2, marker1 });
 
             dalContext.Setup(x => x.GetScores(marker1)).Returns(populatedScores);
-            dalContext.Setup(x => x.GetMarkersByDocument(notFoundDocumentPath, validRemote)).Returns(new DTO_EmojiMarker[] { });
+            dalContext.Setup(x => x.GetMarkersByDocument(notFoundDocumentPath, validRemote)).Returns(System.Array.Empty<DTO_EmojiMarker>());
             dalContext.Setup(x => x.GetAllMarkers()).Returns(new DTO_EmojiMarker[] { marker1, marker2 });
 
             dalContext.Setup(x => x.GetMarkerByPosition(marker1.DocumentURI, validRemote, marker1.Line)).Returns(marker1);
@@ -46,9 +43,9 @@ namespace EmojiBackendTests
         [TestMethod]
         public void TestGetAllMarkersSingle()
         {
-            Mock<EmojiContext> context = new Mock<EmojiContext>();
+            Mock<EmojiContext> context = new();
             context.Setup(x => x.GetAllMarkers()).Returns(new DTO_EmojiMarker[] { marker1 });
-            EmojiService service = new EmojiService(context.Object);
+            EmojiService service = new(context.Object);
 
             BO_EmojiMarker[] BO_Markers = service.GetAllMarkers();
 
@@ -61,7 +58,7 @@ namespace EmojiBackendTests
         [TestMethod]
         public void TestGetAllMarkersMultiple()
         {
-            EmojiService service = new EmojiService(dalContext.Object);
+            EmojiService service = new(dalContext.Object);
             BO_EmojiMarker[] BO_Markers = service.GetAllMarkers();
 
             Assert.AreEqual(2, BO_Markers.Length);
@@ -74,10 +71,10 @@ namespace EmojiBackendTests
         [TestMethod]
         public void TestGetAllMarkersEmpty()
         {
-            Mock<EmojiContext> context = new Mock<EmojiContext>();
-            context.Setup(x => x.GetAllMarkers()).Returns(new DTO_EmojiMarker[] { });
+            Mock<EmojiContext> context = new();
+            context.Setup(x => x.GetAllMarkers()).Returns(System.Array.Empty<DTO_EmojiMarker>());
 
-            EmojiService service = new EmojiService(context.Object);
+            EmojiService service = new(context.Object);
 
             BO_EmojiMarker[] BO_Markers = service.GetAllMarkers();
 
@@ -87,7 +84,7 @@ namespace EmojiBackendTests
         [TestMethod]
         public void TestGetMarkersForDocumentNoDocument()
         {
-            EmojiService service = new EmojiService(dalContext.Object);
+            EmojiService service = new(dalContext.Object);
 
             BO_EmojiMarker[] BO_Markers = service.GetMarkersForDocument(notFoundDocumentPath, validRemote);
 
@@ -97,7 +94,7 @@ namespace EmojiBackendTests
         [TestMethod]
         public void TestGetMarkersForDocumentMultipleMarkers()
         {
-            EmojiService service = new EmojiService(dalContext.Object);
+            EmojiService service = new(dalContext.Object);
 
             BO_EmojiMarker[] BO_Markers = service.GetMarkersForDocument(validDocumentPath, validRemote);
 
@@ -110,20 +107,20 @@ namespace EmojiBackendTests
         [TestMethod]
         public void TestAddNewScoreToNonExistingMarker() 
         {
-            DTO_EmojiScore testScore = new DTO_EmojiScore(-2, user, marker1);
-            DTO_ScoreOccurence occurence = new DTO_ScoreOccurence(-2, 1);
+            DTO_EmojiScore testScore = new(-2, user, marker1);
+            DTO_ScoreOccurence occurence = new(-2, 1);
 
-            Mock<EmojiContext> context = new Mock<EmojiContext>();
+            Mock<EmojiContext> context = new();
             context.Setup(x => x.CreateMarker(validDocumentPath, validRemote, marker1.Line, marker1.Content)).Returns(marker1);
-            context.Setup(x => x.GetMarkersByDocument(validDocumentPath, validRemote)).Returns(new DTO_EmojiMarker[] { });
+            context.Setup(x => x.GetMarkersByDocument(validDocumentPath, validRemote)).Returns(System.Array.Empty<DTO_EmojiMarker>());
             context.Setup(x => x.MarkerExistsOnPosition(validDocumentPath, validRemote, 12)).Returns(false);
             context.Setup(x => x.CreateScore(-2, user, marker1)).Returns(testScore);
             context.Setup(x => x.ScoresForMarker(marker1)).Returns(true);
             context.Setup(x => x.UpdateMarkerDeleteStatus(marker1)).Returns(marker1);
-            context.Setup(x => x.GetScores(marker1)).Returns(new DTO_ScoreOccurence[] { occurence });
+            context.Setup(x => x.GetScores(marker1)).Returns(new[] { occurence });
 
-            EmojiService service = new EmojiService(context.Object);
-            CreateOrAddScoreRequest req = new CreateOrAddScoreRequest(validDocumentPath, validRemote, marker1.Content, marker1.Line, -2, user);
+            EmojiService service = new(context.Object);
+            CreateOrAddScoreRequest req = new(validDocumentPath, validRemote, marker1.Content, marker1.Line, -2, user);
             
             BO_EmojiMarker returnedMarker = service.CreateOrUpdateScore(req);
 
@@ -136,23 +133,23 @@ namespace EmojiBackendTests
         [TestMethod]
         public void TestAddNewScoreToExistingScores() 
         {
-            DTO_EmojiScore testScore        = new DTO_EmojiScore(-2, user, marker1);
-            DTO_ScoreOccurence occurence1   = new DTO_ScoreOccurence(-2, 1);
-            DTO_ScoreOccurence occurence2   = new DTO_ScoreOccurence(2, 2);
-            DTO_ScoreOccurence occurence3   = new DTO_ScoreOccurence(0, 1);
+            DTO_EmojiScore testScore        = new(-2, user, marker1);
+            DTO_ScoreOccurence occurence1   = new(-2, 1);
+            DTO_ScoreOccurence occurence2   = new(2, 2);
+            DTO_ScoreOccurence occurence3   = new(0, 1);
             BO_EmojiScore[] scores = new BO_EmojiScore[] { new BO_EmojiScore(occurence1), new BO_EmojiScore(occurence3), new BO_EmojiScore(occurence2) };
 
-            Mock<EmojiContext> context = new Mock<EmojiContext>();
+            Mock<EmojiContext> context = new();
             context.Setup(x => x.GetMarkersByDocument(validDocumentPath, validRemote)).Returns(new DTO_EmojiMarker[] { marker1 });
             context.Setup(x => x.MarkerExistsOnPosition(validDocumentPath, validRemote, marker1.Line)).Returns(true);
             context.Setup(x => x.GetMarkerByPosition(marker1.DocumentURI, marker1.Repository, marker1.Line)).Returns(marker1);
             context.Setup(x => x.CreateScore(0, user, marker1)).Returns(testScore);
             context.Setup(x => x.ScoresForMarker(marker1)).Returns(true);
             context.Setup(x => x.UpdateMarkerDeleteStatus(marker1)).Returns(marker1);
-            context.Setup(x => x.GetScores(marker1)).Returns(new DTO_ScoreOccurence[] { occurence1, occurence3, occurence2 });
+            context.Setup(x => x.GetScores(marker1)).Returns(new[] { occurence1, occurence3, occurence2 });
 
-            EmojiService service = new EmojiService(context.Object);
-            CreateOrAddScoreRequest req = new CreateOrAddScoreRequest(marker1.DocumentURI, marker1.Repository, marker1.Content, marker1.Line, 0, user);
+            EmojiService service = new(context.Object);
+            CreateOrAddScoreRequest req = new(marker1.DocumentURI, marker1.Repository, marker1.Content, marker1.Line, 0, user);
             
             BO_EmojiMarker returnedMarker = service.CreateOrUpdateScore(req);
 
@@ -169,13 +166,13 @@ namespace EmojiBackendTests
         [TestMethod]
         public void TestUpdateExistingScore() 
         {
-            DTO_EmojiScore testScore = new DTO_EmojiScore(-2, user, marker1);
-            DTO_ScoreOccurence occurence1 = new DTO_ScoreOccurence(-2, 0);
-            DTO_ScoreOccurence occurence2 = new DTO_ScoreOccurence(2, 2);
-            DTO_ScoreOccurence occurence3 = new DTO_ScoreOccurence(0, 1);
+            DTO_EmojiScore testScore = new(-2, user, marker1);
+            DTO_ScoreOccurence occurence1 = new(-2, 0);
+            DTO_ScoreOccurence occurence2 = new(2, 2);
+            DTO_ScoreOccurence occurence3 = new(0, 1);
             BO_EmojiScore[] scores = new BO_EmojiScore[] { new BO_EmojiScore(occurence1), new BO_EmojiScore(occurence3), new BO_EmojiScore(occurence2) };
 
-            Mock<EmojiContext> context = new Mock<EmojiContext>();
+            Mock<EmojiContext> context = new();
             context.Setup(x => x.GetMarkersByDocument(validDocumentPath, validRemote)).Returns(new DTO_EmojiMarker[] { marker1 });
             context.Setup(x => x.GetScoreByMarkerAndUser(marker1, user)).Returns(testScore);
             context.Setup(x => x.MarkerExistsOnPosition(validDocumentPath, validRemote, marker1.Line)).Returns(true);
@@ -183,10 +180,10 @@ namespace EmojiBackendTests
             context.Setup(x => x.CreateScore(0, user, marker1)).Returns(testScore);
             context.Setup(x => x.ScoresForMarker(marker1)).Returns(true);
             context.Setup(x => x.UpdateMarkerDeleteStatus(marker1)).Returns(marker1);
-            context.Setup(x => x.GetScores(marker1)).Returns(new DTO_ScoreOccurence[] { occurence1, occurence3, occurence2 });
+            context.Setup(x => x.GetScores(marker1)).Returns(new[] { occurence1, occurence3, occurence2 });
 
-            EmojiService service = new EmojiService(context.Object);
-            CreateOrAddScoreRequest req = new CreateOrAddScoreRequest(marker1.DocumentURI, marker1.Repository, marker1.Content, marker1.Line, 0, user);
+            EmojiService service = new(context.Object);
+            CreateOrAddScoreRequest req = new(marker1.DocumentURI, marker1.Repository, marker1.Content, marker1.Line, 0, user);
 
             BO_EmojiMarker returnedMarker = service.CreateOrUpdateScore(req);
             Assert.AreEqual(validRemote, returnedMarker.Repository);
@@ -202,13 +199,13 @@ namespace EmojiBackendTests
         [TestMethod]
         public void TestRemoveExistingScore() 
         {
-            DTO_EmojiScore testScore = new DTO_EmojiScore(-2, user, marker1);
-            DTO_ScoreOccurence occurence1 = new DTO_ScoreOccurence(-2, 0);
-            DTO_ScoreOccurence occurence2 = new DTO_ScoreOccurence(2, 2);
-            DTO_ScoreOccurence occurence3 = new DTO_ScoreOccurence(0, 0);
+            DTO_EmojiScore testScore = new(-2, user, marker1);
+            DTO_ScoreOccurence occurence1 = new(-2, 0);
+            DTO_ScoreOccurence occurence2 = new(2, 2);
+            DTO_ScoreOccurence occurence3 = new(0, 0);
             BO_EmojiScore[] scores = new BO_EmojiScore[] { new BO_EmojiScore(occurence1), new BO_EmojiScore(occurence3), new BO_EmojiScore(occurence2) };
 
-            Mock<EmojiContext> context = new Mock<EmojiContext>();
+            Mock<EmojiContext> context = new();
             context.Setup(x => x.GetMarkersByDocument(validDocumentPath, validRemote)).Returns(new DTO_EmojiMarker[] { marker1 });
             context.Setup(x => x.GetScoreByMarkerAndUser(marker1, user)).Returns(testScore);
             context.Setup(x => x.MarkerExistsOnPosition(validDocumentPath, validRemote, marker1.Line)).Returns(true);
@@ -216,11 +213,11 @@ namespace EmojiBackendTests
             context.Setup(x => x.ScoreExistsByMarkerAndUser(marker1, user)).Returns(true);
             context.Setup(x => x.ScoresForMarker(marker1)).Returns(true);
             context.Setup(x => x.UpdateMarkerDeleteStatus(marker1)).Returns(marker1);
-            context.Setup(x => x.GetScores(marker1)).Returns(new DTO_ScoreOccurence[] { occurence1, occurence3, occurence2 });
+            context.Setup(x => x.GetScores(marker1)).Returns(new[] { occurence1, occurence3, occurence2 });
             context.Setup(x => x.DeleteScoreByUserAndMarker(user, marker1));
 
-            EmojiService service    = new EmojiService(context.Object);
-            DeleteScoreRequest req  = new DeleteScoreRequest(marker1.DocumentURI, marker1.Repository, marker1.Line, user);
+            EmojiService service    = new(context.Object);
+            DeleteScoreRequest req  = new(marker1.DocumentURI, marker1.Repository, marker1.Line, user);
 
             service.DeleteScoreFromMarker(req);
 
@@ -238,12 +235,12 @@ namespace EmojiBackendTests
         [TestMethod]
         public void TestRemoveUnexistingScore() 
         {
-            DTO_ScoreOccurence occurence1 = new DTO_ScoreOccurence(-2, 1);
-            DTO_ScoreOccurence occurence2 = new DTO_ScoreOccurence(2, 2);
-            DTO_ScoreOccurence occurence3 = new DTO_ScoreOccurence(0, 1);
+            DTO_ScoreOccurence occurence1 = new(-2, 1);
+            DTO_ScoreOccurence occurence2 = new(2, 2);
+            DTO_ScoreOccurence occurence3 = new(0, 1);
             BO_EmojiScore[] scores = new BO_EmojiScore[] { new BO_EmojiScore(occurence1), new BO_EmojiScore(occurence3), new BO_EmojiScore(occurence2) };
 
-            Mock<EmojiContext> context = new Mock<EmojiContext>();
+            Mock<EmojiContext> context = new();
             context.Setup(x => x.GetMarkersByDocument(validDocumentPath, validRemote)).Returns(new DTO_EmojiMarker[] { marker1 });
             context.Setup(x => x.GetScoreByMarkerAndUser(marker1, user)).Returns((DTO_EmojiScore)null);
             context.Setup(x => x.MarkerExistsOnPosition(validDocumentPath, validRemote, marker1.Line)).Returns(true);
@@ -251,11 +248,11 @@ namespace EmojiBackendTests
             context.Setup(x => x.ScoreExistsByMarkerAndUser(marker1, user)).Returns(true);
             context.Setup(x => x.ScoresForMarker(marker1)).Returns(true);
             context.Setup(x => x.UpdateMarkerDeleteStatus(marker1)).Returns(marker1);
-            context.Setup(x => x.GetScores(marker1)).Returns(new DTO_ScoreOccurence[] { occurence1, occurence3, occurence2 });
+            context.Setup(x => x.GetScores(marker1)).Returns(new[] { occurence1, occurence3, occurence2 });
             context.Setup(x => x.DeleteScoreByUserAndMarker(user, marker1));
 
-            EmojiService service    = new EmojiService(context.Object);
-            DeleteScoreRequest req  = new DeleteScoreRequest(marker1.DocumentURI, marker1.Repository, marker1.Line, user);
+            EmojiService service    = new(context.Object);
+            DeleteScoreRequest req  = new(marker1.DocumentURI, marker1.Repository, marker1.Line, user);
 
             service.DeleteScoreFromMarker(req);
 

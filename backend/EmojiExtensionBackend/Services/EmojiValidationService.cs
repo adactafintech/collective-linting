@@ -5,45 +5,39 @@ namespace EmojiExtensionBackend.Services
 {
     public class EmojiValidationService
     {
-
-        public bool ValidateCreateOrAddScoreRequest(CreateOrAddScoreRequest req) 
+        public static bool ValidateCreateOrAddScoreRequest(CreateOrAddScoreRequest req) 
         {
-            if (req.documentUri.Length == 0 || req.user.Length == 0 || req.content.Length == 0) {
+            if (req.DocumentUri.Length == 0 || req.User.Length == 0 || req.Content.Length == 0) {
                 return false;
             }
 
-            if (req.lineNumber < 0) {
+            if (req.LineNumber < 0) {
                 return false;
             }
 
             // validate score
-            return ValidateScore(req.score);
+            return ValidateScore(req.Score);
         }
 
-        public bool ValidateDeleteScoreRequest(DeleteScoreRequest req) 
+        public static bool ValidateDeleteScoreRequest(DeleteScoreRequest req) 
         {
-            if (req.documentUri.Length == 0 || req.user.Length == 0) {
+            if (req.DocumentUri.Length == 0 || req.User.Length == 0) {
                 return false;
             }
 
-            if (req.lineNumber < 0) {
+            if (req.LineNumber < 0) {
                 return false;
             }
 
             return true;
         }
 
-        public bool ValidateUpdateMarkerRequest(UpdateMarkerRequest req) 
-        {
-            return true;
-        }
-
-        private bool ValidateScore(int score) 
+        private static bool ValidateScore(int score) 
         {
             return GetAvailableScores().Contains(score);
         }
 
-        private int[] GetAvailableScores() 
+        private static int[] GetAvailableScores() 
         {
             return new int[] { 2, 0, -2 };
         }

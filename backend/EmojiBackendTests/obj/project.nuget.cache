@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ytauPs3Os7mi5IjIA5UVPgADCHp5MMxz5hMyZ7OIVbYvPXstSFyh55SoF1rjEcGMYJuvmwEePnk+dIrGQ7IzUA==",
+  "dgSpecHash": "KVeGVUFKp8urpiHM1nUuIpvcU58s/bnWnTBJiFi9eh5UFLx7M5GTBUDH7/93J7NBTbsCPlYjkI8MQtq6pvquLQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiextension\\backend\\EmojiBackendTests\\EmojiBackendTests.csproj",
+  "projectFilePath": "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiLinting\\collective-linting\\backend\\EmojiBackendTests\\EmojiBackendTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Nejc Mlakar\\.nuget\\packages\\castle.core\\4.4.0\\castle.core.4.4.0.nupkg.sha512",
     "C:\\Users\\Nejc Mlakar\\.nuget\\packages\\coverlet.collector\\1.2.0\\coverlet.collector.1.2.0.nupkg.sha512",
