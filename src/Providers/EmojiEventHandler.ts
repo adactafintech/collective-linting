@@ -1,26 +1,16 @@
 import * as vscode from 'vscode';
-import DocumentChange from '../Models/DocumentChange';
-import Gutter from '../Models/Gutter';
-import MarkerPosition from '../Models/MarkerPosition';
-import EmojiPresentationService from '../Services/EmojiPresentationService';
-import GitService from '../Services/GitService';
-import MarkerService from '../Services/MarkerService';
-import EmojiSettingsService from '../Services/SettingsService';
+import {DocumentChange} from '../Models/DocumentChange';
+import {MarkerPosition} from '../Models/MarkerPosition';
+import {EmojiPresentationService} from '../Services/EmojiPresentationService';
+import {GitService} from '../Services/GitService';
+import {EmojiSettingsService} from '../Services/SettingsService';
+import { WebviewService } from '../Services/WebviewService';
 
-export default class EmojiEventHandler {
-    emojiService:           EmojiPresentationService;
-    hoverService:           vscode.Disposable|undefined;
-    emojiSettingsService:   EmojiSettingsService;
-
-    constructor() {
-        this.emojiService           = new EmojiPresentationService();
-        this.emojiSettingsService   = new EmojiSettingsService();
-        this.hoverService           = undefined;
-    }
-
-    public onInitialize() : void {
-        this.emojiService.initializeMarkers();
-    }
+export class EmojiEventHandler {
+    emojiService:           EmojiPresentationService    = new EmojiPresentationService();
+    hoverService:           vscode.Disposable|undefined = undefined;
+    emojiSettingsService:   EmojiSettingsService        = new EmojiSettingsService();
+    lastUsedRepo:           string                      = "";
 
     /**
      * Event that is fired whenever user adds new emoji
@@ -50,24 +40,17 @@ export default class EmojiEventHandler {
         this.emojiService.deleteMarker(position, editor, user);
     }
 
-    public onStatWindowOpen() {
+    public async onStatWindowOpen() {
+        // Get repo form git service and 5 from settings
+        const res = await this.emojiService.provideRepoStats(this.lastUsedRepo, 5);
+
         const panel = vscode.window.createWebviewPanel(
             "statView",
             "Stat View",
             vscode.ViewColumn.Beside
         );
 
-        panel.webview.html = `<!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Cat Coding</title>
-        </head>
-        <body>
-            <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" />
-        </body>
-        </html>`;
+        panel.webview.html = WebviewService.getStatWebviewContent(res[0], res[1]);
     }
 
     /**
@@ -100,6 +83,8 @@ export default class EmojiEventHandler {
     public async onFileOpen(editor: vscode.TextEditor) {
         const fileName = await this.getFileName(editor.document);
         const repository = await this.getRepository(editor.document);
+
+        this.lastUsedRepo = repository;
 
         this.emojiService.resetGutterDecorations(editor, fileName, repository);
         this.emojiSettingsService.updateContext(editor.document.languageId);
@@ -140,14 +125,14 @@ export default class EmojiEventHandler {
     }
 
     private async provideLocation(document: vscode.TextDocument, line: number) {
-        const folder = vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath)[0].toString();
+        const usedFolder = vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath)[0].toString();
 
         let fileName                    = "";
         let repository : string|void    = "";
 
-        if(folder !== undefined) {
+        if(usedFolder !== undefined) {
             const filePath = document.uri.fsPath.toString();
-            let gitService = new GitService(folder);
+            let gitService = new GitService(usedFolder);
     
             fileName    = await gitService.getFileName(filePath);
             repository  = await gitService.getRepository();
@@ -162,15 +147,15 @@ export default class EmojiEventHandler {
      * @returns 
      */
     private async getFileName(document: vscode.TextDocument) : Promise<string> {
-        const folder = vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath)[0].toString();
+        const usedFolder = vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath)[0].toString();
 
-        if(folder !== undefined) {
-            let gitService = new GitService(folder);
-            const filePath = document.uri.fsPath.toString();
-            return await gitService.getFileName(filePath); 
-        } 
+        if(usedFolder === undefined) {
+            return "";
+        }
 
-        return "";
+        let gitService = new GitService(usedFolder);
+        const filePath = document.uri.fsPath.toString();
+        return gitService.getFileName(filePath); 
     }
 
     /**
@@ -179,17 +164,14 @@ export default class EmojiEventHandler {
      * @returns 
      */
     private async getRepository(document: vscode.TextDocument) : Promise<string> {
-        const folder = vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath)[0].toString();
+        const usedFolder = vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath)[0].toString();
 
-        if(folder !== undefined) {
-            const filePath = document.uri.fsPath.toString();
-            let gitService = new GitService(folder);
-    
-            const repo      = await gitService.getRepository();
-    
-            return (repo === undefined) ? "" : repo;
-        } 
+        if(usedFolder === undefined) {
+            return "";
+        }
 
-        return "";
+        let gitService = new GitService(usedFolder);
+        const repo      = await gitService.getRepository();
+        return (repo === undefined) ? "" : repo;
     }
 }

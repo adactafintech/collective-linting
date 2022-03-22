@@ -18,6 +18,14 @@ This repository implements both the client and the server side of extension. All
 > Use menu, quick command and code actions to mark lines with the specific emoji that represents your impression of highlighted lines
 > You can exlude files based on programming language they include.
 
+### AD Authentication for Azure Functions
+
+By default the project is using AD Authentication, that allows members of our organization to easily authenticate and call azure functions ednpoints.
+Implementation of authentication was made with Microsoft MSAL library, following examples listed in 
+    - https://github.com/AzureAD/microsoft-authentication-library-for-js/tree/dev/samples/msal-node-samples/auth-code and 
+    - https://github.com/AzureAD/microsoft-authentication-library-for-js/tree/dev/samples/msal-node-samples/client-credentials
+
+Extensions first generates bearer token that is later appended to all requests. Config data that is used for procuring bearer token is listed in config folder, that should contain files azurePortalConfig.json and azureClientCrdentialRequest.json. For your own use replace the data with your organizations data. 
 ## Requirements
 
 Server side of the extension uses Microsoft Azure Functions v4 and SDK .NET 6.0 with Microsoft SQL 2018.

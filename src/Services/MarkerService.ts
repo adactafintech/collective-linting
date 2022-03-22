@@ -1,28 +1,17 @@
-import { timeStamp } from 'console';
-import * as vscode from 'vscode';
-import DocumentChange from '../Models/DocumentChange';
-import MarkerContainer from "../Models/MarkerContainer";
-import MarkerPosition from '../Models/MarkerPosition';
-import PositionMarker from '../Models/PositionMarker';
+import {MarkerContainer} from "../Models/MarkerContainer";
+import {MarkerPosition} from '../Models/MarkerPosition';
+import {PositionMarker} from '../Models/PositionMarker';
 
-export default class MarkerService {
-    markerStorage: MarkerContainer;
-
-    constructor() {
-        this.markerStorage = new MarkerContainer();
-    }
-
-    public initializeMarkers() : void {
-       // this.markerStorage.initMarkers();
-    }
+export class MarkerService {
+    markerStorage: MarkerContainer = new MarkerContainer();
     
     /**
      * Returns all markers from marker container that are lcoated in this document
      * @param document 
      * @returns 
      */
-    public async getMarkersForDocument(document: string, repository: string) : Promise<PositionMarker[]> {
-        return await this.markerStorage.getMarkersByDocument(document, repository);
+    public getMarkersForDocument(document: string, repository: string) : Promise<PositionMarker[]> {
+        return this.markerStorage.getMarkersByDocument(document, repository);
     }
 
     /**
@@ -49,11 +38,9 @@ export default class MarkerService {
 
         if(newMarker === null) {
             newMarker = new PositionMarker(lineContent.replace(/\s/g, ""), position);
-            // newMarker.addNewScore(user, score);
             this.markerStorage.registerNewMarker(newMarker, user, score);
         } else {
-            this.markerStorage.addmarkerScore(newMarker, score, user);
-            // newMarker.addNewScore(user, score);
+            this.markerStorage.addMarkerScore(newMarker, score, user);
         }
 
         return newMarker;
@@ -75,5 +62,15 @@ export default class MarkerService {
         }
 
         return newMarker;
+    }
+
+    /**
+     * 
+     * @param repository 
+     * @param numberOfResults 
+     * @returns 
+     */
+    public getRepoStats(repository: string, numberOfResults: number) {
+       return this.markerStorage.getRepoStats(repository, numberOfResults);
     }
 }

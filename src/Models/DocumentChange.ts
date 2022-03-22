@@ -1,10 +1,10 @@
 import { Change } from './enums';
 
-export default class DocumentChange {
-    public readonly lineStart:     number;
-    public readonly change:        Change;
-    public readonly lineContent:   string;
-    public readonly document:      string[];
+export class DocumentChange {
+    readonly lineStart:     number;
+    readonly change:        Change;
+    readonly lineContent:   string;
+    readonly document:      string[];
 
     /**
      * 
@@ -15,8 +15,8 @@ export default class DocumentChange {
      */
     constructor(line: number, documentContent: string[], change: Change, lineContent: string = "") {
         this.lineStart     = line;
+        this.document      = documentContent;
         this.change        = change;
         this.lineContent   = lineContent;
-        this.document      = documentContent;
     }
 }

@@ -1,6 +1,6 @@
-import simpleGit, {gitP, SimpleGit, SimpleGitOptions} from 'simple-git';
+import simpleGit, {SimpleGit, SimpleGitOptions} from 'simple-git';
 
-export default class GitService {
+export class GitService {
     git: SimpleGit;
 
     /**
@@ -8,8 +8,6 @@ export default class GitService {
      * @param filePath 
      */
     constructor(filePath: string) {
-        console.log(filePath);
-
         const options: Partial<SimpleGitOptions> = {
             baseDir: filePath,
             binary: 'git',
@@ -30,5 +28,4 @@ export default class GitService {
     public getFileName(filePath: string) {
        return this.git.raw(['ls-files', '--full-name', filePath]);
     }
-
 }

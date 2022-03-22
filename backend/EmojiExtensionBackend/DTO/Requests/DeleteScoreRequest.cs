@@ -5,25 +5,25 @@ namespace EmojiExtensionBackend.DTO
     public class DeleteScoreRequest
     {
         [JsonProperty("documentUri")]
-        public string documentUri { get; set; }
+        public string DocumentUri { get; set; }
 
         [JsonProperty("repository")]
-        public string repository { get; set; }
+        public string Repository { get; set; }
 
         [JsonProperty("line")]
-        public int lineNumber { get; set; }
+        public int LineNumber { get; set; }
 
         [JsonProperty("user")]
-        public string user { get; set; }
+        public string User { get; set; }
 
         public DeleteScoreRequest() { }
 
         public DeleteScoreRequest(string document, string repository, int line, string user)
         {
-            this.documentUri    = document;
-            this.repository     = repository;
-            this.lineNumber     = line;
-            this.user           = user;
+            this.DocumentUri    = document;
+            this.Repository     = repository;
+            this.LineNumber     = line;
+            this.User           = user;
         }
     }
 }

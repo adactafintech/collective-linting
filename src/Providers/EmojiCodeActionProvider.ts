@@ -1,15 +1,8 @@
-/**
- * Provides code actions for converting :) to a smiley emoji.
- */
 import * as vscode from 'vscode';
-import EmojiContainer from '../Models/EmojiContainer';
+import {EmojiContainer} from '../Models/EmojiContainer';
 
 export class EmojiCodeActionProvider implements vscode.CodeActionProvider {
-	emojiContainer: EmojiContainer;
-
-	constructor() {
-		this.emojiContainer = new EmojiContainer();
-	}
+	emojiContainer: EmojiContainer = new EmojiContainer();
 
 	public static readonly providedCodeActionKinds = [
 		vscode.CodeActionKind.QuickFix

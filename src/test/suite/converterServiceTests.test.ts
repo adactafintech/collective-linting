@@ -1,7 +1,7 @@
 import * as assert from 'assert';
-import MarkerPosition from '../../Models/MarkerPosition';
-import PositionMarker from '../../Models/PositionMarker';
-import ConverterService from '../../Services/ConverterService';
+import {MarkerPosition} from '../../Models/MarkerPosition';
+import {PositionMarker} from '../../Models/PositionMarker';
+import {ConverterService} from '../../Services/ConverterService';
 
 suite('Converter Service Tests', () => {
 
@@ -19,7 +19,7 @@ suite('Converter Service Tests', () => {
         ]);
 
         assert.strictEqual(1, markers.length);
-        assert.strictEqual(markers[0].deleted, false);
+        assert.strictEqual(markers[0].softDelete, false);
         assert.strictEqual(markers[0].content, "tole je nova vsebina");
 
         assert.deepStrictEqual(occMap, markers[0].score.getScoreOccurences());
@@ -89,7 +89,6 @@ suite('Converter Service Tests', () => {
         assert.strictEqual(12, response.line);
         assert.strictEqual("test-user", response.user);
         assert.strictEqual("refactor-document", response.documentUri);
-        assert.strictEqual(undefined, response.content);
     });
      
 });

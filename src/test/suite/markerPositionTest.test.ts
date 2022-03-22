@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import MarkerPosition from '../../Models/MarkerPosition';
+import {MarkerPosition} from '../../Models/MarkerPosition';
 
 suite('Marker Position Test Suite', () => {
     

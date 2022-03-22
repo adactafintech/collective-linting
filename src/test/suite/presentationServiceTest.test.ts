@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import EmojiPresentationService from '../../Services/EmojiPresentationService';
+import {EmojiPresentationService} from '../../Services/EmojiPresentationService';
 
 suite('Presentation Service Test Suite', () => {
     const document1 = vscode.Uri.file("C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiextension\\src\\test\\suite\\testDocument-original.cs");

@@ -1,9 +1,8 @@
-import Emoji from "./Emoji";
-import Gutter from "./Gutter";
+import { Emoji } from "./Emoji";
 
-export default class EmojiContainer {
-    public readonly allEmojis: Map<number, Emoji>;
-    public readonly gradeEmojis: Emoji[];
+export class EmojiContainer {
+    readonly allEmojis:     Map<number, Emoji>;
+    readonly gradeEmojis:   Emoji[];
 
     constructor() {
         this.allEmojis = new Map<number, Emoji>();

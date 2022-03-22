@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiextension\\backend\\EmojiBackendTests\\EmojiBackendTests.csproj": {}
+    "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiLinting\\collective-linting\\backend\\EmojiBackendTests\\EmojiBackendTests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiextension\\backend\\EmojiBackendTests\\EmojiBackendTests.csproj": {
+    "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiLinting\\collective-linting\\backend\\EmojiBackendTests\\EmojiBackendTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiextension\\backend\\EmojiBackendTests\\EmojiBackendTests.csproj",
+        "projectUniqueName": "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiLinting\\collective-linting\\backend\\EmojiBackendTests\\EmojiBackendTests.csproj",
         "projectName": "EmojiBackendTests",
-        "projectPath": "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiextension\\backend\\EmojiBackendTests\\EmojiBackendTests.csproj",
+        "projectPath": "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiLinting\\collective-linting\\backend\\EmojiBackendTests\\EmojiBackendTests.csproj",
         "packagesPath": "C:\\Users\\Nejc Mlakar\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiextension\\backend\\EmojiBackendTests\\obj\\",
+        "outputPath": "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiLinting\\collective-linting\\backend\\EmojiBackendTests\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Nejc Mlakar\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -28,8 +28,8 @@
           "net6.0-windows7.0": {
             "targetAlias": "net6.0-windows7.0",
             "projectReferences": {
-              "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiextension\\backend\\EmojiExtensionBackend\\EmojiExtensionBackend.csproj": {
-                "projectPath": "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiextension\\backend\\EmojiExtensionBackend\\EmojiExtensionBackend.csproj"
+              "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiLinting\\collective-linting\\backend\\EmojiExtensionBackend\\EmojiExtensionBackend.csproj": {
+                "projectPath": "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiLinting\\collective-linting\\backend\\EmojiExtensionBackend\\EmojiExtensionBackend.csproj"
               }
             }
           }
@@ -84,14 +84,14 @@
         }
       }
     },
-    "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiextension\\backend\\EmojiExtensionBackend\\EmojiExtensionBackend.csproj": {
+    "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiLinting\\collective-linting\\backend\\EmojiExtensionBackend\\EmojiExtensionBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiextension\\backend\\EmojiExtensionBackend\\EmojiExtensionBackend.csproj",
+        "projectUniqueName": "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiLinting\\collective-linting\\backend\\EmojiExtensionBackend\\EmojiExtensionBackend.csproj",
         "projectName": "EmojiExtensionBackend",
-        "projectPath": "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiextension\\backend\\EmojiExtensionBackend\\EmojiExtensionBackend.csproj",
+        "projectPath": "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiLinting\\collective-linting\\backend\\EmojiExtensionBackend\\EmojiExtensionBackend.csproj",
         "packagesPath": "C:\\Users\\Nejc Mlakar\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiextension\\backend\\EmojiExtensionBackend\\obj\\",
+        "outputPath": "C:\\Users\\Nejc Mlakar\\Desktop\\Adacta\\emojiLinting\\collective-linting\\backend\\EmojiExtensionBackend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Nejc Mlakar\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -123,6 +123,10 @@
             "EntityFramework": {
               "target": "Package",
               "version": "[6.4.4, )"
+            },
+            "Microsoft.ApplicationInsights.WorkerService": {
+              "target": "Package",
+              "version": "[2.15.0, )"
             },
             "Microsoft.Azure.Functions.Extensions": {
               "target": "Package",

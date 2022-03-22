@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\EmojiExtensionBackend",
+    "\\EmojiExtensionBackend\\BO",
+    "\\EmojiExtensionBackend\\DAL",
+    "\\EmojiExtensionBackend\\DTO",
+    "\\EmojiExtensionBackend\\Migrations",
+    "\\EmojiExtensionBackend\\Properties",
+    "\\EmojiExtensionBackend\\Services"
+  ],
+  "SelectedNode": "\\EmojiExtensionBackend\\EmojiExtensionBackend.csproj",
+  "PreviewInSolutionExplorer": false
+}

@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
-import MarkerPosition from '../../Models/MarkerPosition';
-import MarkerService from '../../Services/MarkerService';
+import {MarkerPosition} from '../../Models/MarkerPosition';
+import {MarkerService} from '../../Services/MarkerService';
 
 suite('Marker Service Test Suite', () => {
     const document1 = vscode.Uri.file("src\test\suite\testDocument-original.cs");
@@ -22,8 +22,6 @@ suite('Marker Service Test Suite', () => {
 
         const markers       = await markerService.getMarkersForDocument(document1.path.toString(), repo1);
         const markers2      = await markerService.getMarkersForDocument(document2.path.toString(), repo2);
-
-        console.log(markers);
 
         assert.strictEqual(1, markers.length);
         assert.strictEqual(0, markers2.length);
@@ -115,7 +113,7 @@ suite('Marker Service Test Suite', () => {
 
         assert.strictEqual(1, markers);
         assert.strictEqual(marker, deletedMarker);
-        assert.strictEqual(true, deletedMarker?.deleted);
+        assert.strictEqual(true, deletedMarker?.softDelete);
     });
 
     test("Marker Service - delete marker decrease score", async () => {

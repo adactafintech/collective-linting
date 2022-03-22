@@ -1,8 +1,8 @@
-import MarkerContainer from "../../Models/MarkerContainer";
-import PositionMarker from "../../Models/PositionMarker";
+import {MarkerContainer} from "../../Models/MarkerContainer";
+import {PositionMarker} from "../../Models/PositionMarker";
 import * as vscode from 'vscode';
 import * as assert from 'assert';
-import MarkerPosition from "../../Models/MarkerPosition";
+import {MarkerPosition} from "../../Models/MarkerPosition";
 
 suite('Marker Container Test Suite', () => {
     const testDocument1 = vscode.Uri.file("src\test\suite\testDocument-original.cs");
@@ -18,7 +18,7 @@ suite('Marker Container Test Suite', () => {
     const user2 = "user2";
 
     test("Container test - new mark", async () => {
-        let container = new MarkerContainer(true);
+        let container = new MarkerContainer();
         const position = new MarkerPosition(testDocument1.toString(), repo1, startLine);
 
         let marker = new PositionMarker(lineContent, position);
@@ -31,7 +31,7 @@ suite('Marker Container Test Suite', () => {
     });
 
     test("Container test - new mark duplicate", async () => {
-        let container = new MarkerContainer(true);
+        let container = new MarkerContainer();
         const position = new MarkerPosition(testDocument1.toString(), repo1, startLine);
 
         let marker = new PositionMarker(lineContent, position);
@@ -44,7 +44,7 @@ suite('Marker Container Test Suite', () => {
     });
 
     test("Container test - duplicate addition", async () => {
-        let container = new MarkerContainer(true);
+        let container = new MarkerContainer();
         const position = new MarkerPosition(testDocument1.toString(), repo1, startLine);
 
         let marker = new PositionMarker(lineContent, position);
@@ -58,7 +58,7 @@ suite('Marker Container Test Suite', () => {
     });
 
     test("Container test - multiple new marks", async () => {
-        let container = new MarkerContainer(true);
+        let container = new MarkerContainer();
         const position = new MarkerPosition(testDocument1.toString(), repo1, startLine);
         const position1 = new MarkerPosition(testDocument1.toString(), repo1, startLine+1);
 
@@ -73,7 +73,7 @@ suite('Marker Container Test Suite', () => {
     });
 
     test("Container test - delete marker", async () => {
-        let container = new MarkerContainer(true);
+        let container = new MarkerContainer();
         const position = new MarkerPosition(testDocument1.toString(), repo1, startLine);
         const position1 = new MarkerPosition(testDocument1.toString(), repo1, startLine+1);
 
@@ -89,12 +89,12 @@ suite('Marker Container Test Suite', () => {
         assert.strictEqual(marker1, container.getMarkerByPosition(marker1.position));
         assert.strictEqual(marker, container.getMarkerByPosition(marker.position));
         assert.strictEqual(2, (await container.getMarkersByDocument(testDocument1.toString(), repo1)).length);
-        assert.strictEqual(true, container.getMarkerByPosition(marker1.position)?.deleted);
-        assert.strictEqual(false, container.getMarkerByPosition(marker.position)?.deleted);
+        assert.strictEqual(true, container.getMarkerByPosition(marker1.position)?.softDelete);
+        assert.strictEqual(false, container.getMarkerByPosition(marker.position)?.softDelete);
     });
 
     test("Container test - delete marker duplicate", async () => {
-        let container = new MarkerContainer(true);
+        let container = new MarkerContainer();
         const position = new MarkerPosition(testDocument1.toString(), repo1, startLine);
         const position1 = new MarkerPosition(testDocument1.toString(), repo1, startLine+1);
 
@@ -111,12 +111,12 @@ suite('Marker Container Test Suite', () => {
         assert.strictEqual(marker1, container.getMarkerByPosition(marker1.position));
         assert.strictEqual(marker, container.getMarkerByPosition(marker.position));
         assert.strictEqual(2, (await container.getMarkersByDocument(testDocument1.toString(), repo1)).length);
-        assert.strictEqual(true, container.getMarkerByPosition(marker1.position)?.deleted);
-        assert.strictEqual(false, container.getMarkerByPosition(marker.position)?.deleted);
+        assert.strictEqual(true, container.getMarkerByPosition(marker1.position)?.softDelete);
+        assert.strictEqual(false, container.getMarkerByPosition(marker.position)?.softDelete);
     });
 
     test("Container test - delete markers until empty", async () => {
-        let container = new MarkerContainer(true);
+        let container = new MarkerContainer();
         const position = new MarkerPosition(testDocument1.toString(), repo1, startLine);
         const position1 = new MarkerPosition(testDocument1.toString(), repo1, startLine+1);
 
@@ -133,7 +133,7 @@ suite('Marker Container Test Suite', () => {
         assert.strictEqual(marker1, container.getMarkerByPosition(marker1.position));
         assert.strictEqual(marker, container.getMarkerByPosition(marker.position));
         assert.strictEqual(2, (await container.getMarkersByDocument(testDocument1.toString(), repo1)).length);
-        assert.strictEqual(true, container.getMarkerByPosition(marker1.position)?.deleted);
-        assert.strictEqual(true, container.getMarkerByPosition(marker.position)?.deleted);
+        assert.strictEqual(true, container.getMarkerByPosition(marker1.position)?.softDelete);
+        assert.strictEqual(true, container.getMarkerByPosition(marker.position)?.softDelete);
     });
 });

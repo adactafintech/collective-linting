@@ -1,11 +1,11 @@
-export default class Emoji {
-    public readonly emoji:          string;
-    public readonly filePath:       string;
-    public readonly label:          string;
-    public readonly size:           string;
-    public readonly worth:          number;
-    public readonly usedForRating:  boolean;
-    public readonly executeCommand: string;
+export class Emoji {
+    readonly emoji:          string;
+    readonly filePath:       string;
+    readonly label:          string;
+    readonly size:           string;
+    readonly worth:          number;
+    readonly usedForRating:  boolean;
+    readonly executeCommand: string;
 
     /**
      * 
@@ -18,9 +18,9 @@ export default class Emoji {
      * @param command 
      */
     constructor(label: string, emoji: string, filePath: string, gutterSize: string, worth: number, userCanRate: boolean, command: string) {
+        this.label          = label;
         this.emoji          = emoji;
         this.filePath       = filePath;
-        this.label          = label;
         this.size           = gutterSize;
         this.worth          = worth;
         this.usedForRating  = userCanRate;

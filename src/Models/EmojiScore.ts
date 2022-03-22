@@ -1,17 +1,7 @@
-import { timeStamp } from "console";
-
-export default class EmojiScore {
-    private _average:           number;
-    private _scores:            Map<number, number>;
-    private _users:             Map<string, number>;
-
-    constructor() {
-        this._average           = 0;
-        this._scores            = new Map<number, number>();
-        this._users             = new Map<string, number>();
-
-        //TODO: fill scores with available grade emojis
-    }
+export class EmojiScore {
+    private average:    number              = 0;
+    private users:      Map<string, number> = new Map<string, number>();
+    scores:             Map<number, number> = new Map<number, number>();
 
     /**
      * Adds/Changes users score
@@ -20,7 +10,7 @@ export default class EmojiScore {
      * @returns 
      */
     public addScore(user: string, score: number) : number {
-        let scores = this._scores.get(score);
+        let scores = this.scores.get(score);
 
         if(scores !== undefined) {
             scores+= 1;
@@ -30,9 +20,8 @@ export default class EmojiScore {
         }
 
         //TODO: refactor later
-        this._users.set(user, score);
-
-        return this._average;
+        this.users.set(user, score);
+        return this.average;
     }
 
     /**
@@ -41,7 +30,7 @@ export default class EmojiScore {
      * @returns 
      */
     public getUsersScore(user: string) : number {
-        const score = this._users.get(user); 
+        const score = this.users.get(user); 
         return (score !== undefined) ? score : -53;
     }
 
@@ -51,7 +40,7 @@ export default class EmojiScore {
      * @returns 
      */
     public removeScore(score: number) : number {
-        let newScore = this._scores.get(score);
+        let newScore = this.scores.get(score);
 
         if(newScore !== undefined && score > 0) {
             newScore -= 1;
@@ -59,10 +48,10 @@ export default class EmojiScore {
             newScore = 0;
         }
 
-        this._scores.set(score, newScore);
+        this.scores.set(score, newScore);
 
         let numberOfScores = 0;
-        this._scores.forEach((value, key) => {
+        this.scores.forEach((value, key) => {
             numberOfScores+= value;
         });
 
@@ -74,7 +63,7 @@ export default class EmojiScore {
      * @returns 
      */
     public getScoreOccurences() : Map<number, number> {
-        return this._scores;
+        return this.scores;
     }
 
     /**
@@ -83,8 +72,10 @@ export default class EmojiScore {
      * @returns 
      */
     public usersScoreExists(user: string) : boolean {
-        for(let key in this._scores) {
-            if (user === key) {return true;};
+        for(let key in this.scores) {
+            if (user === key) {
+                return true;
+            }
         }
 
         return false;
@@ -98,7 +89,7 @@ export default class EmojiScore {
         let sum = 0;
         let numberOfScores = 0;
 
-        this._scores.forEach((value, key) => {
+        this.scores.forEach((value, key) => {
             sum += (key * value);
             numberOfScores += value;
         });
@@ -113,18 +104,10 @@ export default class EmojiScore {
     public numberOfScores() : number {
         let numberOfScores = 0;
 
-        this._scores.forEach((value, key) => {
+        this.scores.forEach((value, key) => {
             numberOfScores += value;
         });
 
         return numberOfScores;
-    }
-
-    public get scores() {
-        return this._scores;
-    }
-
-    public set scores(scores: Map<number, number>) {
-        this._scores = scores;
     }
 }
