@@ -8,6 +8,7 @@ import {MarkerPosition} from "../Models/MarkerPosition";
 import {SyncService} from "./SyncService";
 import {DocumentChange} from "../Models/DocumentChange";
 import {Change} from "../Models/enums";
+import { StatHolder } from "../DTO/apiResponse";
 
 export class EmojiPresentationService {
     emojiContainer:     EmojiContainer      = new EmojiContainer();
@@ -224,5 +225,15 @@ export class EmojiPresentationService {
         } else {
             return null;
         }
+    }
+
+    /**
+     * 
+     * @param repository 
+     * @param numberOfResults 
+     * @returns 
+     */
+    public async provideRepoStats(repository: string, numberOfResults: number): Promise<string[]> {
+        return this.markerService.getRepoStats(repository, numberOfResults);
     }
 }

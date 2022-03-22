@@ -4,11 +4,13 @@ import {MarkerPosition} from '../Models/MarkerPosition';
 import {EmojiPresentationService} from '../Services/EmojiPresentationService';
 import {GitService} from '../Services/GitService';
 import {EmojiSettingsService} from '../Services/SettingsService';
+import { WebviewService } from '../Services/WebviewService';
 
 export class EmojiEventHandler {
     emojiService:           EmojiPresentationService    = new EmojiPresentationService();
     hoverService:           vscode.Disposable|undefined = undefined;
     emojiSettingsService:   EmojiSettingsService        = new EmojiSettingsService();
+    lastUsedRepo:           string                      = "";
 
     /**
      * Event that is fired whenever user adds new emoji
@@ -38,24 +40,17 @@ export class EmojiEventHandler {
         this.emojiService.deleteMarker(position, editor, user);
     }
 
-    public onStatWindowOpen() {
+    public async onStatWindowOpen() {
+        // Get repo form git service and 5 from settings
+        const res = await this.emojiService.provideRepoStats(this.lastUsedRepo, 5);
+
         const panel = vscode.window.createWebviewPanel(
             "statView",
             "Stat View",
             vscode.ViewColumn.Beside
         );
 
-        panel.webview.html = `<!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Cat Coding</title>
-        </head>
-        <body>
-            <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" />
-        </body>
-        </html>`;
+        panel.webview.html = WebviewService.getStatWebviewContent(res[0], res[1]);
     }
 
     /**
@@ -88,6 +83,8 @@ export class EmojiEventHandler {
     public async onFileOpen(editor: vscode.TextEditor) {
         const fileName = await this.getFileName(editor.document);
         const repository = await this.getRepository(editor.document);
+
+        this.lastUsedRepo = repository;
 
         this.emojiService.resetGutterDecorations(editor, fileName, repository);
         this.emojiSettingsService.updateContext(editor.document.languageId);

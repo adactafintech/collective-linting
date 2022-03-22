@@ -2,6 +2,7 @@ import {MarkerPosition} from "./MarkerPosition";
 import {PositionMarker} from "./PositionMarker";
 import {ApiService} from "../Services/ApiService";
 import {ConverterService} from "../Services/ConverterService";
+
 export class MarkerContainer {
     markerPositions:    PositionMarker[]    = [];
     private apiService: ApiService          = new ApiService();
@@ -118,4 +119,8 @@ export class MarkerContainer {
     public async removeScore(marker: PositionMarker, user: string) {
         this.apiService.removeScore(this.converter.createRemoveMarkerRequest(marker, user));
     }
-} 
+
+    public async getRepoStats(repository: string, numberOfResults: number) : Promise<string[]> {
+        return this.converter.fromJSONStatResponseToData(await this.apiService.getRepositoryStatistics(this.converter.createGetStatRequest(repository, numberOfResults)));
+    }
+}

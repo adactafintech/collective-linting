@@ -2,7 +2,7 @@ import fetch from 'cross-fetch';
 import * as vscode from 'vscode';
 import * as msal from '@azure/msal-node';
 import { AzurePortalConfig, AzureClientCredentialRequest } from '../DTO/azureConfig';
-import { CreateOrUpdateRequest, RemoveScoreRequest, FindMarkerRequest } from '../DTO/apiRequests';
+import { CreateOrUpdateRequest, RemoveScoreRequest, FindMarkerRequest, GetRepoStats } from '../DTO/apiRequests';
 
 export class ApiService {
     private apiMarkerURL:                       string|undefined                = undefined;
@@ -37,6 +37,37 @@ export class ApiService {
         while(i < this.attempts) {
             // Get Data
             let finalResponse = await fetch(this.apiMarkerURL + "/" + req.document.split("/").join("--") + "/" + req.remote.split("/").join("--") + "/find", 
+            {
+                method: "GET", 
+                mode: "no-cors",
+                headers: {
+                    "authorization": "Bearer " + this.bearerToken
+                }
+            }).then(response => response);
+
+            if(await this.unauthenticatedResponse(finalResponse.status)) {
+                return finalResponse.json();
+            }
+
+            i++;
+        }
+
+        return [];
+    }
+
+    /**
+     * 
+     * @param req 
+     * @returns 
+     */
+    public async getRepositoryStatistics(req: GetRepoStats) {
+        this.fetchAPIURL();
+
+        let i = 0;
+        while(i < this.attempts) {
+            // Get Data
+            let finalResponse = await fetch(
+                this.apiMarkerURL + "/score/statistics?repository=" + req.repository.split("/").join("--") + "/" + req.repository.split("/").join("--") + "&numberOfResults=" + req.numberOfResults, 
             {
                 method: "GET", 
                 mode: "no-cors",

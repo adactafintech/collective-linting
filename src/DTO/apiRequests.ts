@@ -18,3 +18,8 @@ export interface FindMarkerRequest {
     document: string,
     remote: string
 }
+
+export interface GetRepoStats {
+    repository: string,
+    numberOfResults: number
+}

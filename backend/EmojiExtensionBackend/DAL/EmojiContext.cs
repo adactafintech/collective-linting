@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using EmojiExtensionBackend.DTO;
-using System.Threading.Tasks;
 using System.Linq;
+using System;
 
 namespace EmojiExtensionBackend.DAL
 {
@@ -33,7 +33,7 @@ namespace EmojiExtensionBackend.DAL
 
         public virtual DTO_EmojiMarker[] GetMarkersByDocument(string document, string repository) 
         {
-            DTO_EmojiMarker[] markers = this.Marker.Where(o => o.DocumentURI == document && o.Repository == repository).ToArray();
+            DTO_EmojiMarker[] markers = this.Marker.Where(o => o.DocumentURI.Contains(document) && o.Repository.Contains(repository)).ToArray();
             return markers;
         }
         public virtual DTO_EmojiMarker[] GetAllMarkers()
@@ -150,11 +150,40 @@ namespace EmojiExtensionBackend.DAL
             return gradeEmojis;
         }
 
+        public virtual DTO_DocumentStats[] GetStatistics(string repo, int numberOfDocuments, bool asc = false)
+        {
+            var results = this.Marker.Join(
+                this.Score,
+                marker => marker.Id,
+                score => score.Marker.Id,
+                (marker, score) => new { marker, score })
+            .Where(x => x.marker.SoftDelete == false)
+            .GroupBy(g => g.marker.DocumentURI)
+            .Select(g => new {
+                document = g.Key,
+                avg = g.Average(s => s.score.Score),
+                cnt = g.Count(),
+            })
+            .OrderBy(x => x.avg)
+            .Take(numberOfDocuments)
+            .ToList();
+
+            DTO_DocumentStats[] stats = new DTO_DocumentStats[results.Count];
+
+            for (int i = 0; i < results.Count; i++)
+            {
+                var result = results[i];
+                stats[i] = new DTO_DocumentStats(result.document, result.avg, result.cnt);
+            }
+
+            return stats;
+        }
+
         // Just so migrations work.........
         public EmojiContext() {}
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=WISH\\SQLEXPRESS;Initial Catalog=emojiExtension;Integrated Security=True");
+            optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("EmojiContext"));
         }
     }
 }

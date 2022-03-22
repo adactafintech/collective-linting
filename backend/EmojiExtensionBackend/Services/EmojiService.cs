@@ -1,6 +1,7 @@
 ﻿using EmojiExtensionBackend.BO;
 using EmojiExtensionBackend.DAL;
 using EmojiExtensionBackend.DTO;
+using EmojiExtensionBackend.DTO.Requests;
 
 namespace EmojiExtensionBackend.Services
 {
@@ -115,6 +116,14 @@ namespace EmojiExtensionBackend.Services
         {
             DTO_ScoreOccurence[] occ = dal.GetScores(dal.GetMarkerByPosition(document, repository, line));
             return occ;
+        }
+
+        public DTO_RepoStats GetStatistics(StatRequest req)
+        {
+            return new DTO_RepoStats(
+                dal.GetStatistics(req.Repository, req.NumberOfResults, true),
+                dal.GetStatistics(req.Repository, req.NumberOfResults, false)
+            );
         }
     }
 }

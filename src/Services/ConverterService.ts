@@ -1,9 +1,12 @@
 import {MarkerPosition} from "../Models/MarkerPosition";
 import {PositionMarker} from "../Models/PositionMarker";
-import { CreateOrUpdateRequest, RemoveScoreRequest, FindMarkerRequest } from "../DTO/apiRequests";
+import { CreateOrUpdateRequest, RemoveScoreRequest, FindMarkerRequest, GetRepoStats } from "../DTO/apiRequests";
+import { StatHolder } from "../DTO/apiResponse";
 
 export class ConverterService {
     private readonly markerProps: string[] = ["content", "documentUri", "line", "isDeleted"];
+    private readonly repoStatProps: string[] = ["highQualityDocuments", "lowQualityDocuments"];
+    private readonly documentStatProps: string[] = ["documentURI", "averageScore", "numberofScores"];
 
     /**
      * TODO: optimize
@@ -39,6 +42,16 @@ export class ConverterService {
             return [];
         }
     }    
+
+    public fromJSONStatResponseToData(response: any) : string[] {
+        try {
+            return this.formatToTableData(response as StatHolder);
+        } catch(e) {
+            console.error(e);
+        }
+
+        return ["", ""];
+    }
 
     /**
      * Converts marker, user and score to JSON request for creation or update of user score on api v1
@@ -117,5 +130,42 @@ export class ConverterService {
             line: marker.position.line,
             user: user,
         };
+    }
+
+    /**
+     * 
+     * @param repository 
+     * @param numberOfResults 
+     * @returns 
+     */
+    public createGetStatRequest(repository: string, numberOfResults: number) : GetRepoStats {
+        return {
+            repository: repository,
+            numberOfResults: numberOfResults 
+        };
+    }
+
+    public formatToTableData(stats: StatHolder|undefined) : string[] {
+        	
+        let positiveTableData = "";
+        let negativeTableData = "";
+
+        if(stats !== undefined) {
+            for(let i = 0; i < stats.highQualityDocuments.length; i++) {
+                positiveTableData += "<tr>" +
+                "<td>" + stats.highQualityDocuments[i].documentURI + "</td>" +
+                "<td>" + stats.highQualityDocuments[i].averageScore + "</td>" +
+                "<td>" + stats.highQualityDocuments[i].numberofScores + "</td>" +
+                "</tr>";
+
+                negativeTableData += "<tr>" +
+                "<td>" + stats.lowQualityDocuments[i].documentURI + "</td>" +
+                "<td>" + stats.lowQualityDocuments[i].averageScore + "</td>" +
+                "<td>" + stats.lowQualityDocuments[i].numberofScores + "</td>" +
+                "</tr>";
+            }
+        }
+
+        return [positiveTableData, negativeTableData];
     }
 }
