@@ -8,7 +8,6 @@ import {MarkerPosition} from "../Models/MarkerPosition";
 import {SyncService} from "./SyncService";
 import {DocumentChange} from "../Models/DocumentChange";
 import {Change} from "../Models/enums";
-import { StatHolder } from "../DTO/apiResponse";
 
 export class EmojiPresentationService {
     emojiContainer:     EmojiContainer      = new EmojiContainer();
@@ -25,6 +24,7 @@ export class EmojiPresentationService {
      * @param lineContent 
      */
     public saveNewMarker(score: number, position: MarkerPosition, editor: vscode.TextEditor, user: string, lineContent: string) : void {
+        vscode.window.showInformationMessage('Saving emoji stuff');
         this.markerService.saveNewMarker(score, position, user, lineContent);
         this.hideDecorationOnPosition(position);
         this.showDecorationOnPosition(position, editor);
@@ -141,8 +141,7 @@ export class EmojiPresentationService {
      * @param editor 
      */
     private showDecorationOnPosition(position: MarkerPosition, editor: vscode.TextEditor) {
-        const marker = this.markerService.getMarkerByPosition(position);
-        
+        const marker = this.markerService.getMarkerByPosition(position);        
         if(marker !== null && marker.softDelete === false) {
             const uiEmoji = this.emojiContainer.getEmojiByScore(marker.score.calculateAverage());
             if(uiEmoji !== undefined) {
@@ -166,8 +165,8 @@ export class EmojiPresentationService {
         let uiEmojis = await this.getEmojisForDocument(editor.document, fileName, repository);
 
         for(const uiEmoji of uiEmojis) {
-            //Create ne gutter
-            const tmpGutter = new Gutter(uiEmoji.emoji.filePath, uiEmoji.emoji.size);
+            //Create the gutter
+            const tmpGutter = new Gutter(uiEmojis[0].emoji.filePath, uiEmoji.emoji.size);
             this.registerActiveDecoration(tmpGutter, new MarkerPosition(fileName, repository, uiEmoji.position.line));
 
             // add gutter to open document

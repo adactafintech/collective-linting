@@ -1,6 +1,6 @@
 export interface AzureClientCredentialRequest {
     authority: string,
-    scopes: []
+    scopes: [string]
 }
 
 export interface AzurePortalConfig {

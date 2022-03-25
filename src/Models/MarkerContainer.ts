@@ -15,7 +15,9 @@ export class MarkerContainer {
      */
     public async getMarkersByDocument(document: string, repository: string) : Promise<PositionMarker[]> {
         let markers: PositionMarker[]  = [];
-        this.markerPositions = [...this.markerPositions, ...await this.getMarkerApiCall(document, repository)];
+
+        //! already existing markers are added again
+        this.markerPositions = [...await this.getMarkerApiCall(document, repository)];
 
         for(const marker of this.markerPositions) {
             if(marker.position.document === document.trim() && marker.position.repository === repository.trim()) {

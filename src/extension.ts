@@ -4,7 +4,6 @@ import * as vscode from 'vscode';
 import {DocumentChange} from './Models/DocumentChange';
 import {Change} from './Models/enums';
 import {EmojiEventHandler} from './Providers/EmojiEventHandler';
-import {GitService} from './Services/GitService';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -12,7 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "EmojiLinting" is now active!');
+	vscode.window.showInformationMessage('Congratulations, your extension "EmojiLinting" is now active!');
 	let emojiEventHandler 	= new EmojiEventHandler();
 
 	//TODO: registration command
@@ -22,17 +21,19 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Shows gutter icons when chaning active text editor
 	vscode.window.onDidChangeActiveTextEditor(textEditor => {
+		emojiEventHandler.hoverService?.dispose();
+
 		if(textEditor !== undefined) {
 			emojiEventHandler.onFileOpen(textEditor);
+
 			emojiEventHandler.hoverService = vscode.languages.registerHoverProvider(textEditor.document.languageId, {
 				provideHover(document, position, token) {
 					return emojiEventHandler.onHover(position.line, document);
 				}
 			});
 		}
+		
 	});
-
-	
 
 	/**
 	 * Fires everytime any configuration is changed
@@ -90,12 +91,16 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('emojilinting.smily', () => {
+
+			vscode.window.showInformationMessage('Adding emoji');
+
 			emojiEventHandler.hoverService?.dispose();
 			const editor = vscode.window.activeTextEditor;
 			const selection = editor?.selection;
 
 			if(selection && editor) {
 				for (let index = selection.start.line; index <= selection.end.line; index++) {
+					vscode.window.showInformationMessage('Adding emoji on ' + index);
 					emojiEventHandler.onEmojiAdd(2, index, editor, 'extUser', editor.document.lineAt(index).text);
 				}
 

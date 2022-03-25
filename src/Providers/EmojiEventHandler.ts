@@ -24,9 +24,11 @@ export class EmojiEventHandler {
         const position = await this.provideLocation(editor.document, line);
 
         // TODO: get eligable language ids from settings
-        if(editor.document.languageId === "csharp") {
+        // if(editor.document.languageId === "csharp") {
             this.emojiService.saveNewMarker(score, position, editor, user, lineContent);
-        }
+            vscode.window.showInformationMessage('Saved on position');
+
+        // }
     }
 
     /**

@@ -8,12 +8,20 @@ export class ApiService {
     private apiMarkerURL:                       string|undefined                = undefined;
     readonly apiEndPoint:                       string                          = "/api/v1/markerService";
     private bearerToken:                        string                          = "";
-    private readonly azureConfig:               AzurePortalConfig               = require('../../config/azurePortalConfig.json');
-    private readonly clientCredentialRequest:   AzureClientCredentialRequest    = require('../../config/azureClientCredentialRequest.json');
     private readonly attempts:                  number                          = 5;
+    private readonly azureConfig!:              AzurePortalConfig;
+    private readonly clientCredentialRequest!:  AzureClientCredentialRequest;
 
     constructor() {
         this.fetchAPIURL();
+        
+        this.azureConfig.auth.authority     = vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureAuthority')!;
+        this.azureConfig.auth.clientId      = vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureClientId')!;
+        this.azureConfig.auth.clientSecret  = vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureClientSecret')!;
+        this.azureConfig.auth.redirectUri   = vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureRedirectURI')!;
+
+        this.clientCredentialRequest.authority  = vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureAuthority')!;
+        this.clientCredentialRequest.scopes     = [vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureScope')!];
     }
 
     /**
