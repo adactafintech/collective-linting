@@ -1,7 +1,7 @@
 import * as assert from 'assert';
-import PositionMarker from '../../Models/PositionMarker';
 import * as vscode from 'vscode';
-import MarkerPosition from '../../Models/MarkerPosition';
+import {PositionMarker} from '../../Models/PositionMarker';
+import {MarkerPosition} from '../../Models/MarkerPosition';
 
 suite('Position Marker Test Suite', () => {
 

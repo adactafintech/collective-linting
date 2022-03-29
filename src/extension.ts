@@ -1,16 +1,9 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import { strict } from 'assert';
-import { networkInterfaces } from 'os';
-import path = require('path');
-import { domainToUnicode } from 'url';
 import * as vscode from 'vscode';
-import DocumentChange from './Models/DocumentChange';
-import { Change } from './Models/enums';
-import MarkerContainer from './Models/MarkerContainer';
-import { EmojiCodeActionProvider } from './Providers/EmojiCodeActionProvider';
-import EmojiEventHandler from './Providers/EmojiEventHandler';
-import GitService from './Services/GitService';
+import {DocumentChange} from './Models/DocumentChange';
+import {Change} from './Models/enums';
+import {EmojiEventHandler} from './Providers/EmojiEventHandler';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -18,21 +11,28 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "EmojiLinting" is now active!');
-
+	vscode.window.showInformationMessage('Congratulations, your extension "EmojiLinting" is now active!');
 	let emojiEventHandler 	= new EmojiEventHandler();
 
 	//TODO: registration command
 	let disposable = vscode.commands.registerCommand('emojilinting.startLinting', () => {
 		const enabledLanguges = emojiEventHandler.onExtensionActivated(context);
-		emojiEventHandler.onInitialize();
 	});
 
 	// Shows gutter icons when chaning active text editor
 	vscode.window.onDidChangeActiveTextEditor(textEditor => {
+		emojiEventHandler.hoverService?.dispose();
+
 		if(textEditor !== undefined) {
 			emojiEventHandler.onFileOpen(textEditor);
+
+			emojiEventHandler.hoverService = vscode.languages.registerHoverProvider(textEditor.document.languageId, {
+				provideHover(document, position, token) {
+					return emojiEventHandler.onHover(position.line, document);
+				}
+			});
 		}
+		
 	});
 
 	/**
@@ -71,7 +71,6 @@ export function activate(context: vscode.ExtensionContext) {
 	 * Fires when document is saved
 	 */
 	vscode.workspace.onDidSaveTextDocument(document =>  {
-		//TODO: refactor
 		let editor = vscode.window.activeTextEditor;
 		if(editor !== undefined) {
 			let documentContent = [];
@@ -80,26 +79,28 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 
 			emojiEventHandler.onFileSaved(editor, new DocumentChange(-1, documentContent, Change.fileSaved));
-			const neki = vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath)[0].toString();
-			if(neki !== undefined) {	
-				let gitService = new GitService(neki);
-				console.log(gitService.getBaseDir());
-				console.log(gitService.getRepository().then(result => console.log(result)));
-				console.log(gitService.getFileName(document.uri.fsPath.toString()).then(result => console.log(result)));
-			}
 		}
 	});
 
-	context.subscriptions.push(disposable);
+	let statWindowCommand = vscode.commands.registerCommand('emojilinting.showStats', () => {
+		vscode.window.showInformationMessage("Showing stat window");
+		emojiEventHandler.onStatWindowOpen();
+	});
+
+	context.subscriptions.push(disposable, statWindowCommand);
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('emojilinting.smily', () => {
+
+			vscode.window.showInformationMessage('Adding emoji');
+
 			emojiEventHandler.hoverService?.dispose();
 			const editor = vscode.window.activeTextEditor;
 			const selection = editor?.selection;
 
 			if(selection && editor) {
 				for (let index = selection.start.line; index <= selection.end.line; index++) {
+					vscode.window.showInformationMessage('Adding emoji on ' + index);
 					emojiEventHandler.onEmojiAdd(2, index, editor, 'extUser', editor.document.lineAt(index).text);
 				}
 

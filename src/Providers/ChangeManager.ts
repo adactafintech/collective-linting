@@ -1,14 +1,9 @@
-import DocumentChange from "../Models/DocumentChange";
+import {DocumentChange} from "../Models/DocumentChange";
 import { Change } from "../Models/enums";
-import PositionMarker from "../Models/PositionMarker";
-import MarkerService from "../Services/MarkerService";
+import {PositionMarker} from "../Models/PositionMarker";
 
-export default class ChangeManager {
-    documentChanges: Map<string, DocumentChange[]>;
-
-    constructor() {
-        this.documentChanges = new Map<string, DocumentChange[]>();
-    }
+export class ChangeManager {
+    documentChanges: Map<string, DocumentChange[]> = new Map<string, DocumentChange[]>();
 
     /**
      * 
@@ -38,9 +33,9 @@ export default class ChangeManager {
      * @param markers 
      */
     private onLineAdded(line: number, markers: PositionMarker[]) : void {
-        for(let i = 0; i < markers.length; i++) {
-            if(markers[i].position.line > line) {
-                markers[i].position.calculateNewLine(1);
+        for(const marker of markers) {
+            if(marker.position.line > line) {
+                marker.position.calculateNewLine(1);
             }
         }
     }
@@ -51,9 +46,9 @@ export default class ChangeManager {
      * @param markers 
      */
     private contentChanged(change: DocumentChange, markers: PositionMarker[]) : void {
-        for(let i = 0; i < markers.length; i++) {
-            if(markers[i].position.line === change.lineStart) {
-                markers[i].updateContent(change.lineContent);
+        for(const marker of markers) {
+            if(marker.position.line === change.lineStart) {
+                marker.updateContent(change.lineContent);
             }
         }
     }

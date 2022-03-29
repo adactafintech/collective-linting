@@ -1,10 +1,9 @@
-import Emoji from "./Emoji";
-import Gutter from "./Gutter";
-import MarkerPosition from "./MarkerPosition";
+import {Emoji} from "./Emoji";
+import {MarkerPosition} from "./MarkerPosition";
 
-export default class UIEmoji {
-    emoji:      Emoji;
-    position:   MarkerPosition;
+export class UIEmoji {
+    readonly emoji:      Emoji;
+    readonly position:   MarkerPosition;
 
     /**
      * @param emoji 
@@ -14,5 +13,4 @@ export default class UIEmoji {
         this.emoji      = emoji;
         this.position   = position;
     }
-
 }

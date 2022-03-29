@@ -1,7 +1,7 @@
-export default class MarkerPosition {
-    private _document:  string;
-    private _repository: string;
-    private _line:      number;
+export class MarkerPosition {
+    readonly document:      string;
+    readonly repository:    string;
+    line:                   number;
 
     /**
      * 
@@ -10,9 +10,9 @@ export default class MarkerPosition {
      * @param line 
      */
     constructor(document: string, repository: string, line: number) {
-        this._document      = document;
-        this._line          = line;
-        this._repository    = repository;
+        this.document      = document;
+        this.repository    = repository;
+        this.line          = line;
     }
 
     /**
@@ -21,7 +21,7 @@ export default class MarkerPosition {
      * @returns 
      */
     public compare(other: MarkerPosition) : boolean {        
-        return other.line === this._line && other.document === this._document && other.repository === this._repository;
+        return other.line === this.line && other.document.trim() === this.document.trim() && other.repository.trim() === this.repository.trim();
     }
 
     /**
@@ -29,7 +29,7 @@ export default class MarkerPosition {
      * @param newLine 
      */
     public update(newLine: number) : void {
-        this._line = newLine;
+        this.line = newLine;
     }
 
     /**
@@ -38,19 +38,7 @@ export default class MarkerPosition {
      * @returns 
      */
     public calculateNewLine(adjustment: number) : number {
-        this._line += adjustment;
-        return this._line;
-    }
-
-    public get line() : number {
-        return this._line;
-    }
-
-    public get document() : string {
-        return this._document;
-    }
-
-    public get repository(): string {
-        return this._repository;
+        this.line += adjustment;
+        return this.line;
     }
 }

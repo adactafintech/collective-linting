@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import EmojiScore from '../../Models/EmojiScore';
+import {EmojiScore} from '../../Models/EmojiScore';
 
 suite('Average Score Test Suite', () => {
 

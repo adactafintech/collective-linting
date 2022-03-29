@@ -1,0 +1,8 @@
+{
+    "auth": {
+        "clientId": "<client-id>",
+        "authority": "https://login.microsoftonline.com/<tenantId>",
+        "clientSecret": "<client-secret>",
+        "redirectUri": "<redirect-url>"
+    }
+}

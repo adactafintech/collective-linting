@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
 import path = require('path');
 
-export default class Gutter {
-    gutter: vscode.TextEditorDecorationType;
-    filePath: string;
-    size: string;
+export class Gutter {
+    gutter:     vscode.TextEditorDecorationType;
+    filePath:   string;
+    size:       string;
 
     /**
      * 
@@ -16,7 +16,7 @@ export default class Gutter {
         this.size = size;
 
         this.gutter = vscode.window.createTextEditorDecorationType({
-            gutterIconPath: path.join(__dirname, '../../src', 'icons', filePath),
+            gutterIconPath: path.join(__dirname, '../../', 'icons', filePath),
             gutterIconSize: size,
         });
     }
@@ -28,7 +28,7 @@ export default class Gutter {
      */
     public setGutter(filePath: string, size: string) : void {
         this.gutter = vscode.window.createTextEditorDecorationType({
-            gutterIconPath: path.join(__dirname, '../../src', 'icons', filePath),
+            gutterIconPath: path.join(__dirname, '../../', 'icons', filePath),
             gutterIconSize: size,
         });
     }

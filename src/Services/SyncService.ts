@@ -1,20 +1,20 @@
-import DocumentChange from '../Models/DocumentChange';
-import { Change } from '../Models/enums';
-import PositionMarker from '../Models/PositionMarker';
-export default class SyncService {
+import {DocumentChange} from '../Models/DocumentChange';
+import {Change} from '../Models/enums';
+import {PositionMarker} from '../Models/PositionMarker';
+export class SyncService {
     /**
      * 
      * @param change 
      * @param markers 
      */
     public sync(change: DocumentChange, markers: PositionMarker[]) {
-        console.log(markers);
-        if(change.change === Change.lineAdded || change.change === Change.lineUpdated || change.change === Change.lineDeleted) {
-            this.locationChange(change.document, markers);
-        } else if(change.change === Change.lineWhiteSpaced) {
-            this.contentChanged(change, markers);
+        if(markers.length > 0) {
+            if(change.change === Change.lineAdded || change.change === Change.lineUpdated || change.change === Change.lineDeleted) {
+                this.locationChange(change.document, markers);
+            } else if(change.change === Change.lineWhiteSpaced) {
+                this.contentChanged(change, markers);
+            }
         }
-
         return markers;
     }
 
@@ -37,7 +37,7 @@ export default class SyncService {
     private calculateNewLocation(content: string[], marker: PositionMarker) {
         const newLine = this.findNewLine(content, marker.content);
         if(newLine === -1 ) {
-            marker.softDelete();
+            marker.softDelete = true;
         } else if(newLine !== marker.position.line && marker.score.numberOfScores() > 0) {
             marker.enabledMarker();
             marker.position.update(newLine);
@@ -77,9 +77,9 @@ export default class SyncService {
      * @returns 
      */
     private findMarkerOnChangeLocation(change: DocumentChange, markers: PositionMarker[]) : PositionMarker|undefined {
-        for(let i = 0; i < markers.length; i++) {
-            if(markers[i].position.line === change.lineStart) {
-                return markers[i];
+        for(const marker of markers) {
+            if(marker.position.line === change.lineStart) {
+                return marker;
             }
         }
     }
