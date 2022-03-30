@@ -1,6 +1,7 @@
 import {MarkerContainer} from "../Models/MarkerContainer";
 import {MarkerPosition} from '../Models/MarkerPosition';
 import {PositionMarker} from '../Models/PositionMarker';
+import * as vscode from 'vscode';
 
 export class MarkerService {
     markerStorage: MarkerContainer = new MarkerContainer();

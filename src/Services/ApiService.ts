@@ -3,25 +3,29 @@ import * as vscode from 'vscode';
 import * as msal from '@azure/msal-node';
 import { AzurePortalConfig, AzureClientCredentialRequest } from '../DTO/azureConfig';
 import { CreateOrUpdateRequest, RemoveScoreRequest, FindMarkerRequest, GetRepoStats } from '../DTO/apiRequests';
+import { instance } from 'ts-mockito';
 
 export class ApiService {
     private apiMarkerURL:                       string|undefined                = undefined;
     readonly apiEndPoint:                       string                          = "/api/v1/markerService";
     private bearerToken:                        string                          = "";
     private readonly attempts:                  number                          = 5;
-    private readonly azureConfig!:              AzurePortalConfig;
-    private readonly clientCredentialRequest!:  AzureClientCredentialRequest;
+    private readonly azureConfig:              AzurePortalConfig               = 
+    { auth: {
+        authority:      vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureAuthority')!,
+        clientId:       vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureClientId')!,
+        clientSecret:   vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureClientSecret')!,
+        redirectUri:    vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureRedirectURI')!,
+        navigateToLoginRequestUrl: true
+    }};
+    
+    private readonly clientCredentialRequest:  AzureClientCredentialRequest = {
+        authority: vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureAuthority')!,
+        scopes: [vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureScope')!]
+    };
 
     constructor() {
         this.fetchAPIURL();
-        
-        this.azureConfig.auth.authority     = vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureAuthority')!;
-        this.azureConfig.auth.clientId      = vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureClientId')!;
-        this.azureConfig.auth.clientSecret  = vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureClientSecret')!;
-        this.azureConfig.auth.redirectUri   = vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureRedirectURI')!;
-
-        this.clientCredentialRequest.authority  = vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureAuthority')!;
-        this.clientCredentialRequest.scopes     = [vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureScope')!];
     }
 
     /**
@@ -43,6 +47,7 @@ export class ApiService {
 
         let i = 0;
         while(i < this.attempts) {
+
             // Get Data
             let finalResponse = await fetch(this.apiMarkerURL + "/" + req.document.split("/").join("--") + "/" + req.remote.split("/").join("--") + "/find", 
             {
@@ -188,14 +193,20 @@ export class ApiService {
      * @returns 
      */
     private async authenticateClient() : Promise<string> {
+        let debug = vscode.window.createOutputChannel("EmojiDebug");
+
         const cca = new msal.ConfidentialClientApplication(this.azureConfig);
         try {
-            const result = await cca.acquireTokenByClientCredential(this.clientCredentialRequest).then(res => res?.accessToken);
-            if(result !== undefined) {
-                return result;
+            // const result = await cca.acquireTokenByClientCredential(this.clientCredentialRequest).then(res => res?.accessToken);
+            const result = await cca.acquireTokenByClientCredential(this.clientCredentialRequest).then(res => res);
+
+            debug.appendLine(result?.accessToken!);
+
+            if(result?.accessToken !== undefined) {
+                return result.accessToken;
             }
         } catch (error) {
-            console.error(error);
+            vscode.window.showInformationMessage((error as Error).message + " - " + "Getting error");
         }
 
         return "";

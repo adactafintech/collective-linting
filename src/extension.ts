@@ -91,16 +91,12 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('emojilinting.smily', () => {
-
-			vscode.window.showInformationMessage('Adding emoji');
-
 			emojiEventHandler.hoverService?.dispose();
 			const editor = vscode.window.activeTextEditor;
 			const selection = editor?.selection;
 
 			if(selection && editor) {
 				for (let index = selection.start.line; index <= selection.end.line; index++) {
-					vscode.window.showInformationMessage('Adding emoji on ' + index);
 					emojiEventHandler.onEmojiAdd(2, index, editor, 'extUser', editor.document.lineAt(index).text);
 				}
 
