@@ -2,9 +2,12 @@ import {MarkerContainer} from "../Models/MarkerContainer";
 import {MarkerPosition} from '../Models/MarkerPosition';
 import {PositionMarker} from '../Models/PositionMarker';
 import * as vscode from 'vscode';
+import { ApiService } from "./ApiService";
+import { ConverterService } from "./ConverterService";
 
 export class MarkerService {
-    markerStorage: MarkerContainer = new MarkerContainer();
+    //TODO: change to constructor
+    markerStorage: MarkerContainer = new MarkerContainer( new ApiService(), new ConverterService());
     
     /**
      * Returns all markers from marker container that are lcoated in this document

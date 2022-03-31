@@ -97,7 +97,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			if(selection && editor) {
 				for (let index = selection.start.line; index <= selection.end.line; index++) {
-					emojiEventHandler.onEmojiAdd(2, index, editor, 'extUser', editor.document.lineAt(index).text);
+					emojiEventHandler.onEmojiAdd(2, index, editor, editor.document.lineAt(index).text);
 				}
 
 				// Add on hover to selected rows
@@ -118,7 +118,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			if(selection && editor) {
 				for (let index = selection.start.line; index <= selection.end.line; index++) {
-					emojiEventHandler.onEmojiAdd(0, index, editor, 'extUser2', editor.document.lineAt(index).text);
+					emojiEventHandler.onEmojiAdd(0, index, editor, editor.document.lineAt(index).text);
 				}
 
 				// Add on hover to selected rows
@@ -140,7 +140,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			if(selection && editor) {
 				for (let index = selection.start.line; index <= selection.end.line; index++) {
-					emojiEventHandler.onEmojiAdd(-2, index, editor, 'extUser', editor.document.lineAt(index).text);
+					emojiEventHandler.onEmojiAdd(-2, index, editor, editor.document.lineAt(index).text);
 				}
 				
 				// Add on hover to selected rows
@@ -162,7 +162,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			if(selection && editor) {
 				for (let index = selection.start.line; index <= selection.end.line; index++) {
-					emojiEventHandler.onEmojiDelete(index, editor, 'extUser');
+					emojiEventHandler.onEmojiDelete(index, editor);
 				}
 
 				// Add on hover to selected rows

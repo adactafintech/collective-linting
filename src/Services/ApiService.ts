@@ -197,11 +197,7 @@ export class ApiService {
 
         const cca = new msal.ConfidentialClientApplication(this.azureConfig);
         try {
-            // const result = await cca.acquireTokenByClientCredential(this.clientCredentialRequest).then(res => res?.accessToken);
             const result = await cca.acquireTokenByClientCredential(this.clientCredentialRequest).then(res => res);
-
-            debug.appendLine(result?.accessToken!);
-
             if(result?.accessToken !== undefined) {
                 return result.accessToken;
             }
