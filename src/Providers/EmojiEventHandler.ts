@@ -20,14 +20,12 @@ export class EmojiEventHandler {
      * @param user 
      * @param lineContent 
      */
-    public async onEmojiAdd(score: number, line: number, editor: vscode.TextEditor, user: string, lineContent: string)  : Promise<void> {
+    public async onEmojiAdd(score: number, line: number, editor: vscode.TextEditor, lineContent: string)  : Promise<void> {
         const position = await this.provideLocation(editor.document, line);
 
-        // TODO: get eligable language ids from settings
-        // if(editor.document.languageId === "csharp") {
-            this.emojiService.saveNewMarker(score, position, editor, user, lineContent);
+        const user = await this.getGitUsername();
 
-        // }
+        this.emojiService.saveNewMarker(score, position, editor, user, lineContent);
     }
 
     /**
@@ -36,8 +34,9 @@ export class EmojiEventHandler {
      * @param editor 
      * @param user 
      */
-    public async onEmojiDelete(line: number, editor: vscode.TextEditor, user: string) : Promise<void> {
+    public async onEmojiDelete(line: number, editor: vscode.TextEditor) : Promise<void> {
         const position = await this.provideLocation(editor.document, line);
+        const user = await this.getGitUsername();
         this.emojiService.deleteMarker(position, editor, user);
     }
 
@@ -155,6 +154,7 @@ export class EmojiEventHandler {
         }
 
         let gitService = new GitService(usedFolder);
+
         const filePath = document.uri.fsPath.toString();
         return gitService.getFileName(filePath); 
     }
@@ -172,7 +172,20 @@ export class EmojiEventHandler {
         }
 
         let gitService = new GitService(usedFolder);
+
+
         const repo      = await gitService.getRepository();
         return (repo === undefined) ? "" : repo;
+    }
+
+    private async getGitUsername() : Promise<string> {
+        const usedFolder = vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath)[0].toString();
+
+        if(usedFolder === undefined) {
+            return "";
+        }
+
+        let gitService = new GitService(usedFolder);
+        return gitService.getUserName();
     }
 }

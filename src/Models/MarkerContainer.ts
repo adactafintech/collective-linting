@@ -67,8 +67,14 @@ export class MarkerContainer {
      * @param user 
      */
     public addMarkerScore(marker: PositionMarker, score: number, user: string) {
-        marker.addNewScore(user, score);
+        const existingScore = marker.score.getUsersScore(user);
+
+        if(existingScore === -53 || existingScore !== score) {
+            marker.addNewScore(user, score);
+            this.apiService.saveNewMarker(this.converter.createNewMarkerRequest(marker, score, user)); 
         this.apiService.saveNewMarker(this.converter.createNewMarkerRequest(marker, score, user)); 
+            this.apiService.saveNewMarker(this.converter.createNewMarkerRequest(marker, score, user)); 
+        }
     }
 
     /**

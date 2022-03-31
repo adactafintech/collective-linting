@@ -14,12 +14,18 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.window.showInformationMessage('Congratulations, your extension "EmojiLinting" is now active!');
 	let emojiEventHandler 	= new EmojiEventHandler();
 
+	const currentEditor = vscode.window.activeTextEditor;
+	
+	if(currentEditor !== undefined) {
+		emojiEventHandler.onFileOpen(currentEditor);
+	}
+
 	//TODO: registration command
 	let disposable = vscode.commands.registerCommand('emojilinting.startLinting', () => {
 		const enabledLanguges = emojiEventHandler.onExtensionActivated(context);
 	});
 
-	// Shows gutter icons when chaning active text editor
+	// Shows gutter icons when changing active text editor
 	vscode.window.onDidChangeActiveTextEditor(textEditor => {
 		emojiEventHandler.hoverService?.dispose();
 
