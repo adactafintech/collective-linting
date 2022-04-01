@@ -9,5 +9,6 @@ export interface AzurePortalConfig {
         authority:      string,
         clientSecret:   string,
         redirectUri:    string,
+        navigateToLoginRequestUrl: boolean,
     }
 }

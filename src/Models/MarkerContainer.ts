@@ -13,7 +13,7 @@ export class MarkerContainer {
         this.apiService = apiService;
         this.converter = converter;
     }
-
+  
     /**
      * Get all markers that are positioned inside provided document
      * @param document 
@@ -62,7 +62,7 @@ export class MarkerContainer {
 
             // Call api 
             if(!await this.apiService.saveNewMarker(this.converter.createNewMarkerRequest(marker, score, user))) {
-                console.error("Couldn't save new marker");
+                console.error("Coulnd't save marker");
             }
         }
     }
@@ -74,8 +74,14 @@ export class MarkerContainer {
      * @param user 
      */
     public addMarkerScore(marker: PositionMarker, score: number, user: string) {
-        marker.addNewScore(user, score);
+        const existingScore = marker.score.getUsersScore(user);
+
+        if(existingScore === -53 || existingScore !== score) {
+            marker.addNewScore(user, score);
+            this.apiService.saveNewMarker(this.converter.createNewMarkerRequest(marker, score, user)); 
         this.apiService.saveNewMarker(this.converter.createNewMarkerRequest(marker, score, user)); 
+            this.apiService.saveNewMarker(this.converter.createNewMarkerRequest(marker, score, user)); 
+        }
     }
 
     /**

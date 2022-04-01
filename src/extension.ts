@@ -14,12 +14,18 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.window.showInformationMessage('Congratulations, your extension "EmojiLinting" is now active!');
 	let emojiEventHandler 	= new EmojiEventHandler();
 
+	const currentEditor = vscode.window.activeTextEditor;
+	
+	if(currentEditor !== undefined) {
+		emojiEventHandler.onFileOpen(currentEditor);
+	}
+
 	//TODO: registration command
 	let disposable = vscode.commands.registerCommand('emojilinting.startLinting', () => {
 		const enabledLanguges = emojiEventHandler.onExtensionActivated(context);
 	});
 
-	// Shows gutter icons when chaning active text editor
+	// Shows gutter icons when changing active text editor
 	vscode.window.onDidChangeActiveTextEditor(textEditor => {
 		emojiEventHandler.hoverService?.dispose();
 
@@ -91,17 +97,13 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('emojilinting.smily', () => {
-
-			vscode.window.showInformationMessage('Adding emoji');
-
 			emojiEventHandler.hoverService?.dispose();
 			const editor = vscode.window.activeTextEditor;
 			const selection = editor?.selection;
 
 			if(selection && editor) {
 				for (let index = selection.start.line; index <= selection.end.line; index++) {
-					vscode.window.showInformationMessage('Adding emoji on ' + index);
-					emojiEventHandler.onEmojiAdd(2, index, editor, 'extUser', editor.document.lineAt(index).text);
+					emojiEventHandler.onEmojiAdd(2, index, editor, editor.document.lineAt(index).text);
 				}
 
 				// Add on hover to selected rows
@@ -122,7 +124,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			if(selection && editor) {
 				for (let index = selection.start.line; index <= selection.end.line; index++) {
-					emojiEventHandler.onEmojiAdd(0, index, editor, 'extUser2', editor.document.lineAt(index).text);
+					emojiEventHandler.onEmojiAdd(0, index, editor, editor.document.lineAt(index).text);
 				}
 
 				// Add on hover to selected rows
@@ -144,7 +146,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			if(selection && editor) {
 				for (let index = selection.start.line; index <= selection.end.line; index++) {
-					emojiEventHandler.onEmojiAdd(-2, index, editor, 'extUser', editor.document.lineAt(index).text);
+					emojiEventHandler.onEmojiAdd(-2, index, editor, editor.document.lineAt(index).text);
 				}
 				
 				// Add on hover to selected rows
@@ -166,7 +168,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			if(selection && editor) {
 				for (let index = selection.start.line; index <= selection.end.line; index++) {
-					emojiEventHandler.onEmojiDelete(index, editor, 'extUser');
+					emojiEventHandler.onEmojiDelete(index, editor);
 				}
 
 				// Add on hover to selected rows
