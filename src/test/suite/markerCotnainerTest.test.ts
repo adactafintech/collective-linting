@@ -26,50 +26,11 @@ suite('Marker Container Test Suite', () => {
 
     const user1 = "user1";
     const user2 = "user2";
-
-    var mockConfig : AzurePortalConfig = {
-        auth: {
-            clientId: "",
-            authority: "",
-            clientSecret: "",
-            redirectUri: "",
-        }
-    };
-
-    var mockedReq : AzureClientCredentialRequest = {
-        authority: "",
-        scopes: [""]
-    };
     
     const req : FindMarkerRequest = {
         document: testDocument1.toString(),
         remote: repo1
     };
-
-    const markers : PositionMarker[] = [
-        new PositionMarker(lineContent, new MarkerPosition(testDocument1.toString(), repo1, startLine), false),
-        new PositionMarker(lineContent, new MarkerPosition(testDocument1.toString(), repo1, startLine+1), false),
-        new PositionMarker(lineContent, new MarkerPosition(testDocument1.toString(), repo1, startLine+2), false)
-    ];
-
-    const jsonResponse = JSON.parse('[{"documentUri":"refactor-document223","repository":"test-repo","line":193,"content":"tole je nova vsebina","isDeleted":false,"isSupressed":false,"isResolved":true,"scores":[{"score":{"value":2.0,"frequency":0}},{"score":{"value":0.0,"frequency":1}},{"score":{"value":-2.0,"frequency":0}}]}]');
-
-    test("Container Test - get marker by document multiple", async function() {
-
-        const apiServiceMock = mock(ApiService);
-        when(apiServiceMock.getMarkersFromApiByDocument(req)).thenReturn(jsonResponse);
-
-        const converterMock = mock(ConverterService);
-        when(converterMock.fromJSONToMarkerByDocument(jsonResponse)).thenReturn(markers);
-
-        const container = new MarkerContainer(apiServiceMock, new ConverterService());
-        const returnedMarkers = await container.getMarkersByDocument(testDocument1.toString(), repo1);
-
-        assert.strictEqual(3, returnedMarkers.length);
-        assert.strictEqual(startLine, returnedMarkers[0].position.line);
-        assert.strictEqual(startLine+1, returnedMarkers[0].position.line);
-        assert.strictEqual(startLine+2, returnedMarkers[0].position.line);
-    });
 
     describe.skip('These tests need improvements', function () {
         test("Container test - new mark", async () => {

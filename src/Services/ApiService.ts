@@ -10,22 +10,31 @@ export class ApiService {
     readonly apiEndPoint:                       string                          = "/api/v1/markerService";
     private bearerToken:                        string                          = "";
     private readonly attempts:                  number                          = 5;
-    private readonly azureConfig:              AzurePortalConfig               = 
-    { auth: {
-        authority:      vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureAuthority')!,
-        clientId:       vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureClientId')!,
-        clientSecret:   vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureClientSecret')!,
-        redirectUri:    vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureRedirectURI')!,
-        navigateToLoginRequestUrl: true
-    }};
-    
+    private readonly azureConfig:              AzurePortalConfig = {
+        auth: {
+            authority: vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureAuthority')!,
+            clientId: vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureClientId')!,
+            clientSecret: vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureClientSecret')!,
+            redirectUri: vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureRedirectURI')!
+        }
+    };
+
     private readonly clientCredentialRequest:  AzureClientCredentialRequest = {
         authority: vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureAuthority')!,
         scopes: [vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureScope')!]
-    };
+    } ;
 
     constructor() {
         this.fetchAPIURL();
+        
+        /*
+        this.azureConfig.auth.authority     = vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureAuthority')!;
+        this.azureConfig.auth.clientId      = vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureClientId')!;
+        this.azureConfig.auth.clientSecret  = vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureClientSecret')!;
+        this.azureConfig.auth.redirectUri   = vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureRedirectURI')!;
+
+        this.clientCredentialRequest.authority  = vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureAuthority')!;
+        this.clientCredentialRequest.scopes     = [vscode.workspace.getConfiguration('EmojiSettings').get<string>('AzureScope')!];*/
     }
 
     /**
