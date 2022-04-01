@@ -2,13 +2,18 @@ import {MarkerPosition} from "./MarkerPosition";
 import {PositionMarker} from "./PositionMarker";
 import {ApiService} from "../Services/ApiService";
 import {ConverterService} from "../Services/ConverterService";
-import * as vscode from 'vscode';
+import { AuthOptions } from "@azure/msal-common";
 
 export class MarkerContainer {
-    public markerPositions:    PositionMarker[]    = [];
-    private apiService: ApiService          = new ApiService();
-    private converter:  ConverterService    = new ConverterService();
-    
+    markerPositions:    PositionMarker[]    = [];
+    private apiService: ApiService;
+    private converter:  ConverterService;
+
+    constructor(apiService: ApiService, converter: ConverterService) {
+        this.apiService = apiService;
+        this.converter = converter;
+    }
+  
     /**
      * Get all markers that are positioned inside provided document
      * @param document 
@@ -17,10 +22,12 @@ export class MarkerContainer {
     public async getMarkersByDocument(document: string, repository: string) : Promise<PositionMarker[]> {
         let markers: PositionMarker[]  = [];
 
-        //! already existing markers are added again
         this.markerPositions = [...await this.getMarkerApiCall(document, repository)];
 
+        console.log(this.markerPositions);
+
         for(const marker of this.markerPositions) {
+            //! If is deprecated
             if(marker.position.document === document.trim() && marker.position.repository === repository.trim()) {
                 markers.push(marker);
             }
@@ -112,10 +119,15 @@ export class MarkerContainer {
         let markers: any = [];
 
         if(document !== undefined && repository !== undefined) {
+            console.log("calling api service");
             markers = await this.apiService.getMarkersFromApiByDocument(this.converter.createFindMarkersRequest(document, repository));
+            console.log(markers.matchers);
         } else {
             markers = await this.apiService.getAllMarkers();
         }
+
+
+        console.log(markers);
 
         return this.converter.fromJSONToMarkerByDocument(markers);
     }

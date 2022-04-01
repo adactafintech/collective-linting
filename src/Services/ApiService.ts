@@ -222,4 +222,17 @@ export class ApiService {
         
         return false;
     }
+
+    public testMethod () : string {
+        return "minimin";
+    }
+
+    /*
+    const results = Promise.all(Object.entries(animalsRecordingsDictionary).map((animal, string) => figureOutAnimalNoisiness(animal, string)));
+	const expectedResults = [
+		animalsRecordingsDictionary.cat.length,
+		animalsRecordingsDictionary.cow.length,
+		animalsRecordingsDictionary.sheep.length,
+		animalsRecordingsDictionary.elfitz.length,
+	];*/
 }

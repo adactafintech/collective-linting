@@ -44,6 +44,7 @@ export class MarkerService {
             newMarker = new PositionMarker(lineContent.replace(/\s/g, ""), position);
             this.markerStorage.registerNewMarker(newMarker, user, score);
         } else {
+            //TODO: check if the same user already created marker
             this.markerStorage.addMarkerScore(newMarker, score, user);
         }
 
