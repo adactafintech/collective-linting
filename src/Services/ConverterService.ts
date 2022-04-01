@@ -15,6 +15,9 @@ export class ConverterService {
      * @returns 
      */
     public fromJSONToMarkerByDocument(response: any) : PositionMarker[] {
+
+        console.log(response);
+
         try {
             const markers: PositionMarker[] = response.filter((marker: any) => {
                 for(const prop of this.markerProps) {
@@ -37,8 +40,12 @@ export class ConverterService {
                 return newMarker;
             });
     
+
+            console.log(response);
+
             return markers;
         } catch(e) {
+            console.log("Returning null");
             return [];
         }
     }    
