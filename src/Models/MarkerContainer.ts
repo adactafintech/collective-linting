@@ -2,12 +2,13 @@ import {MarkerPosition} from "./MarkerPosition";
 import {PositionMarker} from "./PositionMarker";
 import {ApiService} from "../Services/ApiService";
 import {ConverterService} from "../Services/ConverterService";
+import * as vscode from 'vscode';
 
 export class MarkerContainer {
-    markerPositions:    PositionMarker[]    = [];
+    public markerPositions:    PositionMarker[]    = [];
     private apiService: ApiService          = new ApiService();
-    private converter:  ConverterService = new ConverterService();
-
+    private converter:  ConverterService    = new ConverterService();
+    
     /**
      * Get all markers that are positioned inside provided document
      * @param document 
@@ -54,7 +55,7 @@ export class MarkerContainer {
 
             // Call api 
             if(!await this.apiService.saveNewMarker(this.converter.createNewMarkerRequest(marker, score, user))) {
-                console.error("Couldn't save new marker");
+                console.error("Coulnd't save marker");
             }
         }
     }
@@ -66,8 +67,14 @@ export class MarkerContainer {
      * @param user 
      */
     public addMarkerScore(marker: PositionMarker, score: number, user: string) {
-        marker.addNewScore(user, score);
+        const existingScore = marker.score.getUsersScore(user);
+
+        if(existingScore === -53 || existingScore !== score) {
+            marker.addNewScore(user, score);
+            this.apiService.saveNewMarker(this.converter.createNewMarkerRequest(marker, score, user)); 
         this.apiService.saveNewMarker(this.converter.createNewMarkerRequest(marker, score, user)); 
+            this.apiService.saveNewMarker(this.converter.createNewMarkerRequest(marker, score, user)); 
+        }
     }
 
     /**

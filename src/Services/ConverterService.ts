@@ -4,7 +4,7 @@ import { CreateOrUpdateRequest, RemoveScoreRequest, FindMarkerRequest, GetRepoSt
 import { StatHolder } from "../DTO/apiResponse";
 
 export class ConverterService {
-    private readonly markerProps: string[] = ["content", "documentUri", "line", "isDeleted"];
+    private readonly markerProps: string[] = ["content", "repository", "documentUri", "line", "isDeleted"];
     private readonly repoStatProps: string[] = ["highQualityDocuments", "lowQualityDocuments"];
     private readonly documentStatProps: string[] = ["documentURI", "averageScore", "numberofScores"];
 
@@ -33,7 +33,6 @@ export class ConverterService {
                 });
 
                 newMarker.score.scores = numberMap;
-
                 return newMarker;
             });
     

@@ -24,7 +24,6 @@ export class EmojiPresentationService {
      * @param lineContent 
      */
     public saveNewMarker(score: number, position: MarkerPosition, editor: vscode.TextEditor, user: string, lineContent: string) : void {
-        vscode.window.showInformationMessage('Saving emoji stuff');
         this.markerService.saveNewMarker(score, position, user, lineContent);
         this.hideDecorationOnPosition(position);
         this.showDecorationOnPosition(position, editor);
